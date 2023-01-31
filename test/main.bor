@@ -1,0 +1,6 @@
+func sum(x, y) {
+  res = x + y;
+ res
+}
+
+print(sum(20, 20))
