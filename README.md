@@ -17,11 +17,12 @@ Boron does *not* require NodeJS or Typescript to run *after building*.
 # [__] means that it is optional
 # [filename] -> Name of a .bor file or nothing for REPL
 git clone https://github.com/nav343/Boron.bor
+cd Boron.bor
 yarn install
 yarn start [filename]
 ```
  
-# For Building [Not teting ye]
+# For Building [Not tested yet]
 ```sh
 # [system] -> Follow instructions on pkg gitub or npm package website
 git clone https://github.com/nav343/Boron.bor
@@ -35,7 +36,7 @@ pkg --compress GZip ./dist/index.js --o ./dist/boronc -t [system]
 
 | Plugin | README |
 | ------ | ------ |
-| boron.nvim | [syntax highlighter for (Neo)vim][boron.nvim] |
+| boron.nvim | [Syntax Highlighter for Vim][boron.nvim] |
 
 ## Syntax
 ```js
