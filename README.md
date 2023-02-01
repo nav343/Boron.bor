@@ -16,17 +16,18 @@ Boron does *not* require NodeJS or Typescript to run *after building*.
 ```sh
 # [__] means that it is optional
 # [filename] -> Name of a .bor file or nothing for REPL
-git clone https://github.com/nav343/Boron.bor
-cd Boron.bor
+git clone https://github.com/nav343/Boron.bor.git
+cd ./Boron.bor
 yarn install
 yarn start [filename]
 ```
  
 # For Building [Not tested yet]
+Follow the pkg installation guide [on the NPM website.][pkgNpm] or [on github][pkgGithub]
 ```sh
 # [system] -> Follow instructions on pkg gitub or npm package website
-git clone https://github.com/nav343/Boron.bor
-cd Boron.bor
+git clone https://github.com/nav343/Boron.bor.git
+cd ./Boron.bor
 yarn install
 pkg --compress GZip ./dist/index.js --o ./dist/boronc -t [system]
 ./dist/boronc [filename]
@@ -39,9 +40,22 @@ pkg --compress GZip ./dist/index.js --o ./dist/boronc -t [system]
 | boron.nvim | [Syntax Highlighter for Vim][boron.nvim] |
 
 ## Syntax
-```js
+```rs
+// Variable Declaration
 let nice = 23 // Mutable variable named nice with a value of 23.
 const a = 23; // Immutable variable named a with a value of 23.
+
+// Objects
+let info = {
+    name: 1234, // strings are not supported right now and member node is not yet implemented, so the object is kinda useless for now
+    age: 4321
+}
+
+// User defined Functions
+func add(x, y) {
+    const res = x + y
+    res
+}
 
 // Built-in Functions
 let currentTime = TIME() // Returns a formatted local time string.
@@ -56,3 +70,5 @@ writeFile('filename.type', 'content here') // Write content to a file
 MIT
 
 [boron.nvim]: <https://github.com/nav343/boron.nvim>
+[pkgNpm]: <https://www.npmjs.com/package/pkg>
+[pkgGithub]: <https://github.com/vercel/pkg#readme>
