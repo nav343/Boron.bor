@@ -1,6 +1,6 @@
 import { exit } from 'process'
 import { Statement, Program, Identifier, Expr, Int, Float, Let, BinExpr, Null, Const, VariableDeclaration, AssignmentExpr, Property, Object, CallExpr, MemberExpr, String, FunctionDeclaration } from './ast'
-import { tokenize } from './lexer'
+import { Lexer } from './lexer'
 import { Token } from './utils/Token'
 import { Type } from './utils/Type'
 
@@ -25,7 +25,8 @@ export default class Parser {
   }
 
   public genAst(code: string): Program {
-    this.tokens = tokenize(code)
+    const lexer = new Lexer(code)
+    this.tokens = lexer.tokenize()
     const program: Program = {
       kind: "Program",
       body: []

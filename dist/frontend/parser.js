@@ -21,7 +21,8 @@ class Parser {
         return previousToken;
     }
     genAst(code) {
-        this.tokens = (0, lexer_1.tokenize)(code);
+        const lexer = new lexer_1.Lexer(code);
+        this.tokens = lexer.tokenize();
         const program = {
             kind: "Program",
             body: []
