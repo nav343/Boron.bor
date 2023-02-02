@@ -8,7 +8,10 @@ export type ValueTypes =
   "object" |
   "nativeFn" |
   "string" |
-  "function"
+  "function" |
+
+
+  "color"
 
 export interface RuntimeValues {
   type: ValueTypes,
@@ -40,7 +43,6 @@ export interface ObjectValue extends RuntimeValues {
   properties: Map<string, RuntimeValues>
 }
 
-
 export type FunctionCall = (args: RuntimeValues[], env: Environment) => RuntimeValues
 export interface NativeFnValue extends RuntimeValues {
   type: "nativeFn"
@@ -62,15 +64,12 @@ export function MKNUMBER(n: number = 0) {
 export function MKSTRING(str: string = '') {
   return { value: str, type: 'string' } as StringValue
 }
-
 export function MKNULL() {
   return { type: 'null', value: null } as NullValue
 }
-
 export function MKBOOL(val: boolean) {
   return { type: 'boolean', value: val } as BooleanValue
 }
-
 export function MKNATIVEFN(call: FunctionCall) {
   return { type: 'nativeFn', call } as NativeFnValue
 }

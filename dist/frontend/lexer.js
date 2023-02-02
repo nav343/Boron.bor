@@ -39,6 +39,12 @@ function tokenize(code) {
         else if (src[0] === '.') {
             tokens.push((0, Token_1.token)(Type_1.Type.DOT, src.shift()));
         }
+        else if (/[//]/.test(src[0])) {
+            src.shift();
+            while (src[0] !== '\n') {
+                src.shift();
+            }
+        }
         else if (src[0] == '+' || src[0] == '-' || src[0] == '*' || src[0] == '/' || src[0] == '%' || src[0] == '^') {
             tokens.push((0, Token_1.token)(Type_1.Type.BinOP, src.shift()));
         }
@@ -73,14 +79,6 @@ function tokenize(code) {
                 else {
                     tokens.push((0, Token_1.token)(Type_1.Type.FLOAT, parseFloat(numStr)));
                 }
-            }
-            else if (src[0] === '"') {
-                let str = '';
-                src.shift();
-                while (src[0] != '"') {
-                    str += src.shift();
-                }
-                tokens.push((0, Token_1.token)(Type_1.Type.STRING, str));
             }
             else if ((0, helpers_1.isAlpha)(src[0])) {
                 let identifier = '';

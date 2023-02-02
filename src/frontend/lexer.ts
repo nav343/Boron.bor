@@ -30,8 +30,12 @@ export function tokenize(code: string): Token[] {
       tokens.push(token(Type.COMMA, src.shift()))
     } else if (src[0] === '.') {
       tokens.push(token(Type.DOT, src.shift()))
+    } else if (/[//]/.test(src[0])) {
+      src.shift()
+      while (src[0] !== '\n') {
+        src.shift()
+      }
     }
-
 
 
 
@@ -63,13 +67,6 @@ export function tokenize(code: string): Token[] {
         } else {
           tokens.push(token(Type.FLOAT, parseFloat(numStr)))
         }
-      } else if (src[0] === '"') {
-        let str = ''
-        src.shift()
-        while (src[0] != '"') {
-          str += src.shift()
-        }
-        tokens.push(token(Type.STRING, str))
       } else if (isAlpha(src[0])) {
         let identifier = ''
 

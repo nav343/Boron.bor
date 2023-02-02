@@ -8,7 +8,8 @@
 - No strict typings required
 
 ### Dependencies -> 
-Boron requires `pkg` for building an executable
+- [_PRODUCTION_] Boron requires `pkg` for building an executable
+- [_DEV_]        Boron requires `@types/node @types/prompt-sync` and `prompt-sync` for running with NodeJS. Run `yarn install` to install them.
 
 ## Installation
 Boron does *not* require NodeJS or Typescript to run *after building*.
@@ -25,12 +26,12 @@ yarn start [filename]
 # For Building [Not tested yet]
 Follow the pkg installation guide [on the NPM website.][pkgNpm] or [on github][pkgGithub]
 ```sh
-# [system] -> Follow instructions on pkg gitub or npm package website
+# [system] -> "linux" | "macos" | "win"
 git clone https://github.com/nav343/Boron.bor.git
 cd ./Boron.bor
 yarn install
-pkg --compress GZip ./dist/index.js --o ./dist/boronc -t [system]
-./dist/boronc [filename]
+pkg .
+./dist/build/boron-[system] [filename or nothing]
 ```
 
 ## Editor Setup

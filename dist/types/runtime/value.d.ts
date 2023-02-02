@@ -1,6 +1,6 @@
 import { Statement } from "../frontend/ast";
 import Environment from "./env";
-export declare type ValueTypes = "null" | "number" | "boolean" | "object" | "nativeFn" | "string" | "function";
+export declare type ValueTypes = "null" | "number" | "boolean" | "object" | "nativeFn" | "string" | "function" | "color";
 export interface RuntimeValues {
     type: ValueTypes;
 }

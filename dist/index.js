@@ -18,6 +18,7 @@ function exec() {
         (0, interpreter_1.evaluate)(program, env);
     }
     else {
+        console.clear();
         console.log("Boron Lang v1.0.0\nRead Evaluate Print Loop [REPL] running.....");
         while (true) {
             const code = (0, prompt_sync_1.default)({ sigint: true })({
@@ -27,7 +28,6 @@ function exec() {
             }).toString();
             if (code === 'exit()') {
                 console.clear();
-                console.log("Exited with code 0");
                 break;
             }
             const program = parser.genAst(code);

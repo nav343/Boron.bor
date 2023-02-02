@@ -91,7 +91,7 @@ export default class Parser {
     if (this.at().tokenType === Type.SEMICOL) {
       this.advance()
       if (isConstant) {
-        throw `Must assign to constant values, no value provided for ${identifier}`
+        console.log(`Must assign to constant values, no value provided for ${identifier}`)
       }
       return {
         kind: 'VariableDeclaration',
@@ -208,17 +208,17 @@ export default class Parser {
   }
 
   private parseCallExpr(caller: Expr): Expr {
-    let call_expr: Expr = {
+    let callExpr: Expr = {
       kind: "CallExpr",
       caller,
       args: this.parseArgs(),
     } as CallExpr;
 
     if (this.at().tokenType == Type.OPENPAR) {
-      call_expr = this.parseCallExpr(call_expr);
+      callExpr = this.parseCallExpr(callExpr);
     }
 
-    return call_expr;
+    return callExpr;
   }
 
   private parseArgs(): Expr[] {

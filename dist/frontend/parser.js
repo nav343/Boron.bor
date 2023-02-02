@@ -79,7 +79,7 @@ class Parser {
         if (this.at().tokenType === Type_1.Type.SEMICOL) {
             this.advance();
             if (isConstant) {
-                throw `Must assign to constant values, no value provided for ${identifier}`;
+                console.log(`Must assign to constant values, no value provided for ${identifier}`);
             }
             return {
                 kind: 'VariableDeclaration',
@@ -177,15 +177,15 @@ class Parser {
         return member;
     }
     parseCallExpr(caller) {
-        let call_expr = {
+        let callExpr = {
             kind: "CallExpr",
             caller,
             args: this.parseArgs(),
         };
         if (this.at().tokenType == Type_1.Type.OPENPAR) {
-            call_expr = this.parseCallExpr(call_expr);
+            callExpr = this.parseCallExpr(callExpr);
         }
-        return call_expr;
+        return callExpr;
     }
     parseArgs() {
         this.expect(Type_1.Type.OPENPAR, "Expected open parenthesis");

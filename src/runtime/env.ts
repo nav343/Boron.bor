@@ -1,5 +1,5 @@
 import { exit } from "process"
-import { MKNATIVEFN, MKNULL, MKSTRING, RuntimeValues } from "./value"
+import { MKNATIVEFN, MKNULL, MKSTRING, NumberValue, RuntimeValues } from "./value"
 import { MKBOOL, MKNUMBER } from "../runtime/value";
 import { writeFileSync } from "fs";
 
