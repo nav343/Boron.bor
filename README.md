@@ -70,6 +70,6 @@ writeFile('filename.type', 'content here') // Write content to a file
 ## License
 MIT
 
-[boron.nvim]: <https://github.com/nav343/boron.nvim>
+[boron.nvim]: <https://github.com/nav343/boron.vim>
 [pkgNpm]: <https://www.npmjs.com/package/pkg>
 [pkgGithub]: <https://github.com/vercel/pkg#readme>

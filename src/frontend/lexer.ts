@@ -57,9 +57,17 @@ export class Lexer {
       } else if (this.cc === ',') {
         tokens.push(token(Type.COMMA, this.cc))
         this.next()
-      } else if (/[//]/.test(this.cc)) {
+      } else if (this.cc === '>') {
+        tokens.push(token(Type.GR, this.cc))
         this.next()
-        while (this.cc !== '\n') {
+      } else if (this.cc === '<') {
+        tokens.push(token(Type.SR, this.cc))
+        this.next()
+      }
+
+      else if (this.cc === '$') {
+        this.next()
+        while (this.code[this.pos] !== '\n') {
           this.next()
         }
       }

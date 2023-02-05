@@ -1,5 +1,5 @@
 import { exit } from "process"
-import { MKNATIVEFN, MKNULL, MKSTRING, NumberValue, RuntimeValues } from "./value"
+import { MKNATIVEFN, MKNULL, MKSTRING, RuntimeValues } from "./value"
 import { MKBOOL, MKNUMBER } from "../runtime/value";
 import { writeFileSync } from "fs";
 
@@ -12,7 +12,16 @@ export function createGlobalScope() {
 
   // Native functions like writeFile, print, time etc
   env.declareVariable('print', MKNATIVEFN((args) => {
-    console.log(...args)
+    args.map((result: any) => {
+      switch (result.type) {
+        case 'object':
+          console.log(result.properties)
+        case 'null':
+          console.log("null")
+        case 'number':
+          console.log(result.value)
+      }
+    })
     return MKNULL()
   }), true)
 

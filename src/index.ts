@@ -6,8 +6,8 @@ import { evaluate } from "./runtime/interpreter";
 
 function exec() {
   const path = process.argv[2]
-  const parser = new Parser()
   const env = createGlobalScope()
+  const parser = new Parser()
 
   if (typeof path === 'string') {
     const code = readFileSync(path, { encoding: 'utf8' }).toString()

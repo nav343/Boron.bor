@@ -13,6 +13,9 @@ export enum Type {
   COLON,       // :
   DOT,         // .
 
+  GR,          // >
+  SR,          // <
+
   BinOP,
   ADD,
   SUB,
@@ -32,7 +35,11 @@ export enum Type {
   IF,
   NULL,
   CONST,
-  FUNC
+  FUNC,
+  WHILE,
+
+
+  TRUE,
 }
 
 export const KEYWORDS: Record<string, Type> = {
@@ -40,5 +47,7 @@ export const KEYWORDS: Record<string, Type> = {
   "if": Type.IF,
   "null": Type.NULL,
   "const": Type.CONST,
-  "func": Type.FUNC
+  "func": Type.FUNC,
+  "while": Type.WHILE,
+  "TRUE": Type.TRUE,
 }

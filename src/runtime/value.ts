@@ -9,7 +9,9 @@ export type ValueTypes =
   "nativeFn" |
   "string" |
   "function" |
-
+  "whileLoop" |
+  "ifStatement" |
+  "elseStatement" |
 
   "color"
 
@@ -56,6 +58,20 @@ export interface FunctionValue extends RuntimeValues {
   declarationEnv: Environment
   body: Statement[]
 }
+
+export interface WhileValue extends RuntimeValues {
+  type: "whileLoop"
+  condition: boolean
+  body: Statement[]
+}
+
+export interface IfValue extends RuntimeValues {
+  type: "ifStatement"
+  condition: boolean
+  body: Statement[]
+}
+
+
 
 // MACROS
 export function MKNUMBER(n: number = 0) {

@@ -1,5 +1,5 @@
 import { exit } from 'process'
-import { Statement, Program, Identifier, Expr, Int, Float, Let, BinExpr, Null, Const, VariableDeclaration, AssignmentExpr, Property, Object, CallExpr, MemberExpr, String, FunctionDeclaration } from './ast'
+import { Statement, Program, Identifier, Expr, Int, Float, Let, BinExpr, Null, Const, VariableDeclaration, AssignmentExpr, Property, Object, CallExpr, MemberExpr, String, FunctionDeclaration, WhileDeclaration, While, IfStatement } from './ast'
 import { Lexer } from './lexer'
 import { Token } from './utils/Token'
 import { Type } from './utils/Type'
@@ -9,7 +9,6 @@ export default class Parser {
   private notEof(): boolean {
     return this.tokens[0].tokenType != Type.EOF
   }
-
 
   private expect(type: Type, error: any) {
     const previous = this.tokens.shift() as Token
@@ -49,10 +48,77 @@ export default class Parser {
         return this.parseVarDeclaration()
       case Type.FUNC:
         return this.parseFuncDeclaration()
+
+      // TODO: IDK HOW TO FIX THIS :(, cannot get the value of an identifier
+      case Type.IF:
+        return this.parseIfStatement()
       default:
         return this.parseExpr()
     }
   }
+
+  private parseIfStatement(): Statement {
+    this.advance()
+    this.expect(Type.OPENPAR, 'Expected an open parenthesis.')
+    if (this.advance().tokenType === Type.CLOSEPAR) {
+      throw `Expected a condition`
+    }
+    const condition = this.parseCondition()
+    this.expect(Type.CLOSEPAR, "Expected a closing parenthesis after condition")
+    this.expect(Type.OPENCURLY, "Expected an if else body")
+    if (this.advance().tokenType === Type.CLOSECURLY) {
+      throw `Expected an if else body`
+    }
+    const body: Statement[] = []
+    while (this.at().tokenType != Type.EOF && this.at().tokenType != Type.CLOSECURLY) {
+      body.push(this.parseStatement())
+    }
+    this.expect(Type.CLOSECURLY, 'Expected a closing curly bracket "}" after the while loop body.')
+
+    const _if = {
+      kind: 'IfStatement',
+      condition,
+      body
+    } as IfStatement
+    return _if
+  }
+
+  // TODO: BROKE CONDITION CHECKING
+  private parseCondition(): boolean {
+    const val1 = this.expect(Type.IDENTIFIER, "Expected an identifier").value
+    this.expect(Type.Equals, "Expected double equals to symbol")
+    this.expect(Type.Equals, "Expected double equals to symbol")
+    const val2 = this.expect(Type.INT, "Expected an identifier").value
+    return val1 === val2
+  }
+
+  // while (condition) -> { body }
+  // TODO: this is wayyy harder than expected...... so i'm gonna skip this for now haha
+  /* private parseWhileDeclaration(): Statement {
+    this.advance()
+    this.expect(Type.OPENPAR, "Expected open parenthesis after while keyword")
+
+    //condition
+    const condition = this.parseCondition()
+    console.log(condition)
+
+    this.expect(Type.CLOSEPAR, "Expected closing parenthesis after condition")
+    this.expect(Type.GR, "Expected > after condition closing parenthesis")
+
+    this.expect(Type.OPENCURLY, `Expected a while loop body`)
+    const body: Statement[] = []
+    while (this.at().tokenType != Type.EOF && this.at().tokenType != Type.CLOSECURLY) {
+      body.push(this.parseStatement())
+    }
+    this.expect(Type.CLOSECURLY, 'Expected a closing curly bracket "}" after the while loop body.')
+
+    const _while = {
+      kind: 'WhileDeclaration',
+      condition,
+      body
+    } as WhileDeclaration
+    return _while
+  } */
 
   private parseFuncDeclaration(): Statement {
     this.advance()
@@ -237,11 +303,9 @@ export default class Parser {
 
   private parseArgumentList(): Expr[] {
     const args = [this.parseAssignmentExpr()];
-
     while (this.at().tokenType == Type.COMMA && this.advance()) {
       args.push(this.parseAssignmentExpr());
     }
-
     return args;
   }
 
@@ -321,6 +385,8 @@ export default class Parser {
       // Keywords
       case Type.LET:
         return { kind: "Let", keyword: this.advance().value } as Let
+      case Type.WHILE:
+        return { kind: "While", keyword: this.advance().value } as While
       case Type.CONST:
         return { kind: "Const", keyword: this.advance().value } as Const
       case Type.NULL: {

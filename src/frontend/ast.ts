@@ -4,6 +4,9 @@ export type NodeType = "Program"
 
   | "VariableDeclaration"
   | "FunctionDeclaration"
+  | "WhileDeclaration"
+  | "IfStatement"
+  | "ElseStatement"
   | "AssignmentExpr"
   | "FunctionCall"
   | "CallExpr"
@@ -19,6 +22,7 @@ export type NodeType = "Program"
   | "Let"
   | "Const"
   | "Null"
+  | "While"
 
 // Statements and Program
 export interface Statement {
@@ -41,6 +45,18 @@ export interface FunctionDeclaration extends Statement {
   name: string,
   body: Statement[]
 }
+export interface WhileDeclaration extends Statement {
+  kind: "WhileDeclaration",
+  condition: boolean
+  body: Statement[]
+}
+export interface IfStatement extends Statement {
+  kind: "IfStatement",
+  condition: boolean
+  body: Statement[]
+}
+
+
 
 // Expressions
 export interface Expr extends Statement { }
@@ -81,6 +97,12 @@ export interface Null extends Expr {
   kind: "Null"
   keyword: string
 }
+
+export interface While extends Expr {
+  kind: "While"
+  keyword: string
+}
+
 
 // Numbers
 export interface Int extends Expr {

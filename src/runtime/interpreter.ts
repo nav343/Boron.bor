@@ -1,5 +1,5 @@
 import { exit } from "process";
-import { AssignmentExpr, BinExpr, CallExpr, Float, FunctionDeclaration, Identifier, Int, Object, Program, Statement, String, VariableDeclaration } from "../frontend/ast";
+import { AssignmentExpr, BinExpr, CallExpr, Float, FunctionDeclaration, Identifier, Int, Object, Program, Statement, String, VariableDeclaration, WhileDeclaration } from "../frontend/ast";
 import Environment from "./env";
 import { evalAssignmentExpr } from "./evals/assignment";
 import { evalBinExpr } from "./evals/binExpr";
@@ -8,6 +8,7 @@ import { evalFuncDeclaration } from "./evals/funcDeclaration";
 import { evalObjectExpr } from "./evals/object";
 import { evalProgram } from "./evals/program";
 import { evalVarDeclaration } from "./evals/varDeclaration";
+import { evalWhileDeclaration } from "./evals/whileDeclaration";
 import { MKNULL, NumberValue, RuntimeValues, StringValue } from "./value";
 
 function evalIdentifier(identifier: Identifier, env: Environment): RuntimeValues {
@@ -37,6 +38,8 @@ export function evaluate(astNode: Statement, env: Environment): RuntimeValues {
       return evalVarDeclaration(astNode as VariableDeclaration, env)
     case "FunctionDeclaration":
       return evalFuncDeclaration(astNode as FunctionDeclaration, env)
+    case "WhileDeclaration":
+      return evalWhileDeclaration(astNode as WhileDeclaration, env)
 
     case "AssignmentExpr":
       return evalAssignmentExpr(astNode as AssignmentExpr, env)
