@@ -405,7 +405,6 @@ export default class Parser {
         const charAt = typeof this.code === 'undefined' ? '' : this.code.indexOf(value)
 
         let spaces = ''
-
         for (let i = 0; i < charAt; i++) {
           spaces += ' '
         }
