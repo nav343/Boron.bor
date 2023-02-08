@@ -1,14 +1,18 @@
 import { exit } from 'process'
 import { Statement, Program, Identifier, Expr, Int, Float, Let, BinExpr, Null, Const, VariableDeclaration, AssignmentExpr, Property, Object, CallExpr, MemberExpr, String, FunctionDeclaration, WhileDeclaration, While, IfStatement } from './ast'
 import { Lexer } from './lexer'
+import { RED, BOLD, RESET, WHITE } from './utils/colors'
 import { Token } from './utils/Token'
 import { Type } from './utils/Type'
 
 export default class Parser {
   private tokens: Token[] = []
+  private code: string | undefined
   private notEof(): boolean {
     return this.tokens[0].tokenType != Type.EOF
   }
+
+  constructor(code?: string) { this.code = code }
 
   private expect(type: Type, error: any) {
     const previous = this.tokens.shift() as Token
@@ -395,8 +399,22 @@ export default class Parser {
       }
 
       default:
-        const errChar = JSON.stringify(this.at(), null, '  ')
-        console.log(`Unexpected token ${errChar} found while parsing.`)
+        // error characters
+        const type = this.at().tokenType
+        const value = this.at().value
+        const charAt = typeof this.code === 'undefined' ? '' : this.code.indexOf(value)
+
+        let spaces = ''
+
+        for (let i = 0; i < charAt; i++) {
+          spaces += ' '
+        }
+
+        console.log(`${RED}Unexpected Token Type: "${Type[type]}" found while parsing.${RESET}\n${BOLD + RED}Type  :${RESET} ${BOLD + WHITE + Type[type] + RESET}\n${BOLD + RED}Value :${RESET} ${BOLD + WHITE + value + RESET}`)
+        if (typeof this.code !== 'undefined') {
+          console.log(this.code.split('\n')[0])
+          console.log(`${spaces}^`)
+        }
         exit(1)
     }
   }

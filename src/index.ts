@@ -7,14 +7,15 @@ import { evaluate } from "./runtime/interpreter";
 function exec() {
   const path = process.argv[2]
   const env = createGlobalScope()
-  const parser = new Parser()
 
   if (typeof path === 'string') {
     const code = readFileSync(path, { encoding: 'utf8' }).toString()
+    const parser = new Parser(code)
     const program = parser.genAst(code)
     evaluate(program, env)
   } else {
     console.clear()
+    const parser = new Parser()
     console.log("Boron Lang v1.0.0\nRead Evaluate Print Loop [REPL] running.....")
     while (true) {
       const code = prompt({ sigint: true })({

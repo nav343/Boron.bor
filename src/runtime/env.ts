@@ -14,12 +14,10 @@ export function createGlobalScope() {
   env.declareVariable('print', MKNATIVEFN((args) => {
     args.map((result: any) => {
       switch (result.type) {
-        case 'object':
-          console.log(result.properties)
-        case 'null':
-          console.log("null")
-        case 'number':
-          console.log(result.value)
+        case 'object': console.log(result.properties)
+        case 'null': console.log("null")
+        case 'number': console.log(result.value)
+        case 'string': console.log(result.value)
       }
     })
     return MKNULL()
