@@ -1,7 +1,8 @@
 import { exit } from "process"
 import { MKNATIVEFN, MKNULL, MKSTRING, RuntimeValues } from "./value"
 import { MKBOOL, MKNUMBER } from "../runtime/value";
-import { writeFileSync } from "fs";
+import { readFileSync, writeFileSync } from "fs";
+import { BOLD, RED, RESET, YELLOW } from "../frontend/utils/colors";
 
 export function createGlobalScope() {
   const env = new Environment()
@@ -31,6 +32,14 @@ export function createGlobalScope() {
     writeFileSync(`${args[0].value}`, `${args[1].value}`)
     return MKNULL()
   }), true)
+  env.declareVariable('readFile', MKNATIVEFN((args: any[]) => {
+    if (args.length > 2) {
+      console.log(`Expected 1 arguments but got ${args.length}`)
+      exit(1)
+    }
+    const contents = readFileSync(args[0].value, { encoding: 'utf8' }).toString()
+    return MKSTRING(contents)
+  }), true)
 
   env.declareVariable('TIME', MKNATIVEFN(() => {
     const date = new Date()
@@ -58,7 +67,8 @@ export default class Environment {
 
   public declareVariable(varName: string, value: RuntimeValues, isConstant: boolean): RuntimeValues {
     if (this.variables.has(varName)) {
-      throw `Cannot redeclare variable ${varName}.\nTry using another name or remove the existing variable`
+      console.log(RED + `Cannot redeclare variable ${YELLOW + BOLD + varName + RESET}.\n${YELLOW + BOLD}Try using another name or remove the existing variable` + RESET)
+      exit(1)
     }
     this.variables.set(varName, value)
     if (isConstant) {
@@ -70,7 +80,8 @@ export default class Environment {
   public assignVariable(varName: string, value: RuntimeValues): RuntimeValues {
     const env = this.resolve(varName)
     if (env.constants.has(varName)) {
-      throw `Cannot assign to a constant variable ${varName}`
+      console.log(RED + BOLD + `Cannot assign to a constant variable ${YELLOW + varName}` + RESET)
+      exit(1)
     }
 
     env.variables.set(varName, value)
@@ -82,7 +93,7 @@ export default class Environment {
       return this
     }
     if (this.parent === undefined) {
-      console.log(`Cannot resolve ${varName} because it does not exist.`)
+      console.log(RED + BOLD + `Cannot resolve ${YELLOW + varName + RED} because it does not exist.` + RESET)
       /*const col = this.code.indexOf(varName)
       let nice = ''
       for (let i = 0; i < col; i++) {

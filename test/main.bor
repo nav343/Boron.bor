@@ -1,2 +1,2 @@
-let b = "hi_ksjdfasdf";
-print("hello world")
+const parserContents = readFile("./src/frontend/parser.ts");
+print(parserContents)

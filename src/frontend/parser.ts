@@ -1,7 +1,7 @@
 import { exit } from 'process'
-import { Statement, Program, Identifier, Expr, Int, Float, Let, BinExpr, Null, Const, VariableDeclaration, AssignmentExpr, Property, Object, CallExpr, MemberExpr, String, FunctionDeclaration, WhileDeclaration, While, IfStatement } from './ast'
+import { Statement, Program, Identifier, Expr, Int, Float, Let, BinExpr, Null, Const, VariableDeclaration, AssignmentExpr, Property, Object, CallExpr, MemberExpr, String, FunctionDeclaration, While, IfStatement } from './ast'
 import { Lexer } from './lexer'
-import { RED, BOLD, RESET, WHITE } from './utils/colors'
+import { RED, BOLD, RESET, WHITE, YELLOW } from './utils/colors'
 import { Token } from './utils/Token'
 import { Type } from './utils/Type'
 
@@ -17,7 +17,8 @@ export default class Parser {
   private expect(type: Type, error: any) {
     const previous = this.tokens.shift() as Token
     if (!previous || previous.tokenType != type) {
-      console.error("Parser Error\n", error, this.at(), "Expecting: ", type)
+      //console.error("Parser Error\n", error, this.at(), "Expecting: ", type)
+      console.log(RED + BOLD + `Parse Error:\n${YELLOW + error + RESET + RED + BOLD}\nExpecting ${Type[type]}` + RESET)
       exit(1)
     }
     return previous
