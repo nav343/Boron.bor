@@ -25,16 +25,17 @@ export function createGlobalScope() {
   }), true)
 
   env.declareVariable('writeFile', MKNATIVEFN((args: any[]) => {
-    if (args.length > 2) {
-      console.log(`Expected 2 arguments but got ${args.length}`)
+    if (args.length > 2 || args.length < 2) {
+      console.log(RED + BOLD + `Expected 2 arguments but got ${YELLOW + args.length + RESET + RED}` + RESET)
       exit(1)
+    } else {
+      writeFileSync(`${args[0].value}`, `${args[1].value}`)
     }
-    writeFileSync(`${args[0].value}`, `${args[1].value}`)
     return MKNULL()
   }), true)
   env.declareVariable('readFile', MKNATIVEFN((args: any[]) => {
-    if (args.length > 2) {
-      console.log(`Expected 1 arguments but got ${args.length}`)
+    if (args.length != 1) {
+      console.log(RED + BOLD + `Expected 1 arguments but got ${YELLOW + args.length + RESET + RED}` + RESET)
       exit(1)
     }
     const contents = readFileSync(args[0].value, { encoding: 'utf8' }).toString()
@@ -45,6 +46,11 @@ export function createGlobalScope() {
     const date = new Date()
     const time = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
     return MKSTRING(time)
+  }), true)
+
+  env.declareVariable('clearScr', MKNATIVEFN(() => {
+    console.clear()
+    return MKNULL()
   }), true)
   return env
 }

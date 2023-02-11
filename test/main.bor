@@ -1,2 +1,3 @@
-const parserContents = readFile("./src/frontend/parser.ts");
-print(parserContents)
+print(readFile("./test/main.bor"))
+clearScr()
+print(TIME())
