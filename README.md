@@ -1,5 +1,5 @@
 <p align="center">
-<img src="https://github.com/nav343/Boron.bor/blob/main/assets/logo.png" style="border-radius: 300px" width=200 height=200></img>
+<img src="https://github.com/nav343/Boron.bor/blob/main/assets/boron_logo.png" style="border-radius: 300px" width=200 height=200></img>
 </p>
 
 # Boron
