@@ -14,15 +14,26 @@ export function createGlobalScope() {
   // Native functions like writeFile, print, time etc
   env.declareVariable('print', MKNATIVEFN((args) => {
     args.map((result: any) => {
-      switch (result.type) {
-        case 'object': console.log(result.properties)
-        case 'null': console.log("null")
-        case 'number': console.log(result.value)
-        case 'string': console.log(result.value)
-      }
+      if (result.type === "object") console.log(result.properties)
+      else if (result.type === 'null') console.log(null)
+      else if (result.type === 'number') console.log(result.value)
+      else if (result.type === 'string') console.log(result.value)
+      else console.log(result)
     })
     return MKNULL()
   }), true)
+
+  // Just for fun, you can override this function
+  env.declareVariable('aMagicFunction', MKNATIVEFN(() => {
+    console.log("U called me?")
+    let stars = '*'
+    while (stars.length < 10000) {
+      stars += '*'
+      console.log(RED + BOLD + stars + RESET)
+      console.log(stars.length)
+    }
+    return MKNULL()
+  }), false)
 
   env.declareVariable('writeFile', MKNATIVEFN((args: any[]) => {
     if (args.length > 2 || args.length < 2) {
@@ -52,6 +63,8 @@ export function createGlobalScope() {
     console.clear()
     return MKNULL()
   }), true)
+
+
   return env
 }
 

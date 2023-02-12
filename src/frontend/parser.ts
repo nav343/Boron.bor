@@ -17,7 +17,6 @@ export default class Parser {
   private expect(type: Type, error: any) {
     const previous = this.tokens.shift() as Token
     if (!previous || previous.tokenType != type) {
-      //console.error("Parser Error\n", error, this.at(), "Expecting: ", type)
       console.log(RED + BOLD + `Parse Error:\n${YELLOW + error + RESET + RED + BOLD}\nExpecting ${Type[type]}` + RESET)
       exit(1)
     }
