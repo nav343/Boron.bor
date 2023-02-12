@@ -1,3 +1,4 @@
+![Boron Language](logo)
 # Boron
 ## ✨Boron V1 is finally here!!
 ## _Yet another programming language written in Typescript_
@@ -56,3 +57,4 @@ MIT
 [pkgNpm]: <https://www.npmjs.com/package/pkg>
 [pkgGithub]: <https://github.com/vercel/pkg#readme>
 [docs]: <https://github.com/nav343/Boron.bor/wiki/Documentation>
+[logo]: <https://github.com/nav343/Boron.bor/blob/main/assets/logo.png>
