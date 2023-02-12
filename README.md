@@ -1,6 +1,7 @@
 <p align="center">
-  <img src="https://github.com/nav343/Boron.bor/blob/main/assets/logo.png" width="350" title="Boron Programming Language">
+  <img src="https://github.com/nav343/Boron.bor/blob/main/assets/logo.png" width="200" height="200" style="border-radius:300px" title="Boron Programming Language">
 </p>
+
 # Boron
 ## ✨Boron V1 is finally here!!
 ## _Yet another programming language written in Typescript_
