@@ -1,4 +1,4 @@
-import { exit } from "process";
+import { BOLD, RED, RESET } from "./utils/colors";
 import { isAlpha, isNumber } from "./utils/helpers";
 import { Token, token } from "./utils/Token";
 import { Type, KEYWORDS } from "./utils/Type";
@@ -134,8 +134,8 @@ export class Lexer {
             tokens.push(token(Type.IDENTIFIER, identifier))
           }
         } else {
-          console.log("Unrecognized token " + this.cc + " found.")
-          exit(1)
+          console.log(RED + BOLD + "Unrecognized token " + this.cc + " found." + RESET)
+          break
         }
       }
     }

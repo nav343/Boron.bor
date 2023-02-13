@@ -1,5 +1,5 @@
-import { exit } from "process";
 import { AssignmentExpr, BinExpr, CallExpr, Float, FunctionDeclaration, Identifier, Int, Object, Program, Statement, String, VariableDeclaration, WhileDeclaration } from "../frontend/ast";
+import { BOLD, RED, RESET } from "../frontend/utils/colors";
 import Environment from "./env";
 import { evalAssignmentExpr } from "./evals/assignment";
 import { evalBinExpr } from "./evals/binExpr";
@@ -50,7 +50,7 @@ export function evaluate(astNode: Statement, env: Environment): RuntimeValues {
     case "CallExpr":
       return evalCallExpr(astNode as CallExpr, env)
     default:
-      console.error("Undefined node " + astNode.kind)
-      exit(1)
+      console.error(RED + BOLD + "Undefined node " + astNode.kind + RESET)
+      return { type: 'null' }
   }
 }

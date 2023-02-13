@@ -17,7 +17,12 @@ export function createGlobalScope() {
       if (result.type === "object") console.log(result.properties)
       else if (result.type === 'null') console.log(null)
       else if (result.type === 'number') console.log(result.value)
-      else if (result.type === 'string') console.log(result.value)
+      else if (result.type === 'string') {
+        if (result.value === '' || result.value === ' ') { return }
+        else {
+          console.log(result.value)
+        }
+      }
       else console.log(result)
     })
     return MKNULL()
@@ -27,10 +32,10 @@ export function createGlobalScope() {
   env.declareVariable('aMagicFunction', MKNATIVEFN(() => {
     console.log("U called me?")
     let stars = '*'
-    while (stars.length < 10000) {
+    while (stars.length < 1000) {
+      stars += '!'
       stars += '*'
       console.log(RED + BOLD + stars + RESET)
-      console.log(stars.length)
     }
     return MKNULL()
   }), false)
@@ -49,8 +54,21 @@ export function createGlobalScope() {
       console.log(RED + BOLD + `Expected 1 arguments but got ${YELLOW + args.length + RESET + RED}` + RESET)
       exit(1)
     }
-    const contents = readFileSync(args[0].value, { encoding: 'utf8' }).toString()
-    return MKSTRING(contents)
+    try {
+      const contents = readFileSync(args[0].value, { encoding: 'utf8' }).toString()
+      return MKSTRING(contents)
+    } catch (error: any) {
+      function cwd(): string {
+        const currentWorkingDir = process.cwd()
+        if (currentWorkingDir.length > 10) {
+          return '...' + currentWorkingDir.split(currentWorkingDir.charAt(10))[1]
+        } else { return currentWorkingDir }
+      }
+      if (error.errno === -2) {
+        console.log(RED + BOLD + `${YELLOW + args[0].value + RESET + RED + BOLD} does not exist in ${YELLOW + cwd() + RED + BOLD}` + RESET)
+      }
+      return MKSTRING()
+    }
   }), true)
 
   env.declareVariable('TIME', MKNATIVEFN(() => {

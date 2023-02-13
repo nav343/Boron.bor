@@ -1,4 +1,5 @@
 import { exit } from 'process'
+import { NumberValue } from '../runtime/value'
 import { Statement, Program, Identifier, Expr, Int, Float, Let, BinExpr, Null, Const, VariableDeclaration, AssignmentExpr, Property, Object, CallExpr, MemberExpr, String, FunctionDeclaration, While, IfStatement } from './ast'
 import { Lexer } from './lexer'
 import { RED, BOLD, RESET, WHITE, YELLOW } from './utils/colors'
@@ -65,7 +66,7 @@ export default class Parser {
     this.advance()
     this.expect(Type.OPENPAR, 'Expected an open parenthesis.')
     if (this.advance().tokenType === Type.CLOSEPAR) {
-      throw `Expected a condition`
+      console.log(RED + BOLD + "Expected a condition" + RESET)
     }
     const condition = this.parseCondition()
     this.expect(Type.CLOSEPAR, "Expected a closing parenthesis after condition")
@@ -162,7 +163,7 @@ export default class Parser {
     if (this.at().tokenType === Type.SEMICOL) {
       this.advance()
       if (isConstant) {
-        console.log(`Must assign to constant values, no value provided for ${identifier}`)
+        console.log(RED + BOLD + `Must assign to constant values, no value provided for ${identifier}` + RESET)
       }
       return {
         kind: 'VariableDeclaration',
@@ -186,7 +187,6 @@ export default class Parser {
 
   private parseExpr(): Expr {
     return this.parseAssignmentExpr()
-
   }
 
   private parseAssignmentExpr(): Expr {
@@ -257,6 +257,7 @@ export default class Parser {
     while (this.at().value === '*' || this.at().value === '/' || this.at().value === '%' || this.at().value === '^') {
       const op = this.advance().value
       const right = this.parseCallMemberExpr()
+      if (((right as unknown) as NumberValue).value === 0) { console.log(RED + BOLD + 'Cannot divide by 0' + RESET); exit(1) }
       left = {
         kind: "BinExpr",
         left,

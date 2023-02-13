@@ -1,3 +1,2 @@
-print(readFile("./test/main.bor"))
-clearScr()
-print(TIME())
+func main() { "hello world" }
+print(main())

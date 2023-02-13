@@ -1,4 +1,5 @@
 export function isAlpha(str: string): boolean {
+  if (str === null) { return false }
   return str.toUpperCase() != str.toLowerCase()
 }
 

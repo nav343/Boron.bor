@@ -1,4 +1,5 @@
 import { CallExpr, Identifier } from "../../frontend/ast";
+import { BOLD, RED, RESET, YELLOW } from "../../frontend/utils/colors";
 import Environment from "../env";
 import { evaluate } from "../interpreter";
 import { FunctionValue, MKNULL, NativeFnValue, RuntimeValues } from "../value";
@@ -27,6 +28,6 @@ export function evalCallExpr(expr: CallExpr, env: Environment): RuntimeValues {
     return result;
   }
 
-  console.log(`Cannot call "${(expr.caller as Identifier).symbol}" as it is not a function.`)
+  console.log(RED + BOLD + `Cannot call "${YELLOW + (expr.caller as Identifier).symbol + RESET + RED + BOLD}" as it is not a function.` + RESET)
   return { type: 'null' }
 }
