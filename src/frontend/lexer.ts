@@ -54,6 +54,9 @@ export class Lexer {
       } else if (this.cc === '.') {
         tokens.push(token(Type.DOT, this.cc))
         this.next()
+      } else if (this.cc === '!') {
+        tokens.push(token(Type.BANG, this.cc))
+        this.next()
       } else if (this.cc === ',') {
         tokens.push(token(Type.COMMA, this.cc))
         this.next()

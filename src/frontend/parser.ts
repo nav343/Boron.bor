@@ -1,5 +1,5 @@
 import { exit } from 'process'
-import { NumberValue } from '../runtime/value'
+import { IfValue, NumberValue } from '../runtime/value'
 import { Statement, Program, Identifier, Expr, Int, Float, Let, BinExpr, Null, Const, VariableDeclaration, AssignmentExpr, Property, Object, CallExpr, MemberExpr, String, FunctionDeclaration, While, IfStatement } from './ast'
 import { Lexer } from './lexer'
 import { RED, BOLD, RESET, WHITE, YELLOW } from './utils/colors'
@@ -63,38 +63,34 @@ export default class Parser {
   }
 
   private parseIfStatement(): Statement {
+    let op: string | null = ''
     this.advance()
-    this.expect(Type.OPENPAR, 'Expected an open parenthesis.')
-    if (this.advance().tokenType === Type.CLOSEPAR) {
-      console.log(RED + BOLD + "Expected a condition" + RESET)
+    this.expect(Type.OPENPAR, "Expected open parenthesis after 'if' keyword")
+    const val1 = this.expect(this.at().tokenType, "Expecting identifier")
+
+    if (this.at().tokenType === Type.Equals ||
+      this.at().tokenType === Type.GR ||
+      this.at().tokenType === Type.SR ||
+      this.at().tokenType === Type.BANG
+    ) { op = this.at().value; this.advance() } else {
+      console.log(RED + BOLD + `Expecting one of these: ${YELLOW + ">, <, =, !" + RESET + RED + BOLD}. But got ${YELLOW + this.at().value + RESET + RED + BOLD}` + RESET)
+      exit(1)
     }
-    const condition = this.parseCondition()
-    this.expect(Type.CLOSEPAR, "Expected a closing parenthesis after condition")
-    this.expect(Type.OPENCURLY, "Expected an if else body")
-    if (this.advance().tokenType === Type.CLOSECURLY) {
-      throw `Expected an if else body`
-    }
+    const op1 = this.expect(Type.Equals, "Expecting double equals").value
+
+    const val2 = this.expect(this.at().tokenType, "Idk wut to check for?")
+    const condition = eval(`${val1.value} ${op}${op1} ${val2.value}`)
+    this.expect(Type.CLOSEPAR, "Expecting closing parenthesis")
+
+    this.expect(Type.OPENCURLY, `Expected a function body`)
     const body: Statement[] = []
+
     while (this.at().tokenType != Type.EOF && this.at().tokenType != Type.CLOSECURLY) {
       body.push(this.parseStatement())
     }
-    this.expect(Type.CLOSECURLY, 'Expected a closing curly bracket "}" after the while loop body.')
 
-    const _if = {
-      kind: 'IfStatement',
-      condition,
-      body
-    } as IfStatement
-    return _if
-  }
-
-  // TODO: BROKE CONDITION CHECKING
-  private parseCondition(): boolean {
-    const val1 = this.expect(Type.IDENTIFIER, "Expected an identifier").value
-    this.expect(Type.Equals, "Expected double equals to symbol")
-    this.expect(Type.Equals, "Expected double equals to symbol")
-    const val2 = this.expect(Type.INT, "Expected an identifier").value
-    return val1 === val2
+    this.expect(Type.CLOSECURLY, 'Expected a closing curly bracket "}" after the function body.')
+    return { kind: 'IfStatement', condition, body } as IfStatement
   }
 
   // while (condition) -> { body }

@@ -1,10 +1,11 @@
-import { AssignmentExpr, BinExpr, CallExpr, Float, FunctionDeclaration, Identifier, Int, Object, Program, Statement, String, VariableDeclaration, WhileDeclaration } from "../frontend/ast";
+import { AssignmentExpr, BinExpr, CallExpr, Float, FunctionDeclaration, Identifier, IfStatement, Int, Object, Program, Statement, String, VariableDeclaration, WhileDeclaration } from "../frontend/ast";
 import { BOLD, RED, RESET } from "../frontend/utils/colors";
 import Environment from "./env";
 import { evalAssignmentExpr } from "./evals/assignment";
 import { evalBinExpr } from "./evals/binExpr";
 import { evalCallExpr } from "./evals/callExpr";
 import { evalFuncDeclaration } from "./evals/funcDeclaration";
+import { evalIfStatement } from "./evals/ifElseStatement";
 import { evalObjectExpr } from "./evals/object";
 import { evalProgram } from "./evals/program";
 import { evalVarDeclaration } from "./evals/varDeclaration";
@@ -40,6 +41,8 @@ export function evaluate(astNode: Statement, env: Environment): RuntimeValues {
       return evalFuncDeclaration(astNode as FunctionDeclaration, env)
     case "WhileDeclaration":
       return evalWhileDeclaration(astNode as WhileDeclaration, env)
+    case "IfStatement":
+      return evalIfStatement(astNode as IfStatement)
 
     case "AssignmentExpr":
       return evalAssignmentExpr(astNode as AssignmentExpr, env)

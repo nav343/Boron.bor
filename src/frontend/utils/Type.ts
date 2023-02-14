@@ -12,6 +12,7 @@ export enum Type {
   COMMA,       // ;
   COLON,       // :
   DOT,         // .
+  BANG,        // !
 
   GR,          // >
   SR,          // <

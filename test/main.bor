@@ -1,2 +1,5 @@
-func main() { "hello world" }
-print(main())
+let a = 1;
+let b = 1;
+if (10 == 10) {
+  print("hello")
+}
