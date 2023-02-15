@@ -1,6 +1,6 @@
 import { exit } from 'process'
-import { IfValue, NumberValue } from '../runtime/value'
-import { Statement, Program, Identifier, Expr, Int, Float, Let, BinExpr, Null, Const, VariableDeclaration, AssignmentExpr, Property, Object, CallExpr, MemberExpr, String, FunctionDeclaration, While, IfStatement } from './ast'
+import { NumberValue } from '../runtime/value'
+import { Statement, Program, Identifier, Expr, Int, Float, Let, BinExpr, Null, Const, VariableDeclaration, AssignmentExpr, Property, Object, CallExpr, MemberExpr, String, FunctionDeclaration, While, IfStatement, Export, Import } from './ast'
 import { Lexer } from './lexer'
 import { RED, BOLD, RESET, WHITE, YELLOW } from './utils/colors'
 import { Token } from './utils/Token'
@@ -54,6 +54,12 @@ export default class Parser {
       case Type.FUNC:
         return this.parseFuncDeclaration()
 
+      // packages
+      case Type.EXPORT:
+        return this.parseExportStatement()
+      case Type.IMPORT:
+        return this.parseImportStatement()
+
       // TODO: IDK HOW TO FIX THIS :(, cannot get the value of an identifier
       case Type.IF:
         return this.parseIfStatement()
@@ -62,12 +68,27 @@ export default class Parser {
     }
   }
 
+  private parseExportStatement(): Statement {
+    this.advance()
+    this.expect(Type.OPENPAR, "Expected open parenthesis")
+    const item = this.expect(Type.IDENTIFIER, "Expected a value to export")
+    this.expect(Type.CLOSEPAR, "Expected closing parenthesis")
+    return { name: item.value, kind: 'Export' } as Export
+  }
+
+  private parseImportStatement(): Statement {
+    this.advance()
+    const _package = this.expect(Type.STRING, "Expected a package name after import keyword").value
+    return { kind: 'Import', _package } as Import
+  }
+
   private parseIfStatement(): Statement {
     let op: string | null = ''
     this.advance()
+
+    // CONDITION START
     this.expect(Type.OPENPAR, "Expected open parenthesis after 'if' keyword")
     const val1 = this.expect(this.at().tokenType, "Expecting identifier")
-
     if (this.at().tokenType === Type.Equals ||
       this.at().tokenType === Type.GR ||
       this.at().tokenType === Type.SR ||
@@ -77,19 +98,20 @@ export default class Parser {
       exit(1)
     }
     const op1 = this.expect(Type.Equals, "Expecting double equals").value
-
     const val2 = this.expect(this.at().tokenType, "Idk wut to check for?")
     const condition = eval(`${val1.value} ${op}${op1} ${val2.value}`)
     this.expect(Type.CLOSEPAR, "Expecting closing parenthesis")
+    // CONDITION END
 
+    // BODY START
     this.expect(Type.OPENCURLY, `Expected a function body`)
     const body: Statement[] = []
-
     while (this.at().tokenType != Type.EOF && this.at().tokenType != Type.CLOSECURLY) {
       body.push(this.parseStatement())
     }
-
     this.expect(Type.CLOSECURLY, 'Expected a closing curly bracket "}" after the function body.')
+    // BODY END
+
     return { kind: 'IfStatement', condition, body } as IfStatement
   }
 

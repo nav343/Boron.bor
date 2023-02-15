@@ -23,6 +23,8 @@ export type NodeType = "Program"
   | "Const"
   | "Null"
   | "While"
+  | "Export"
+  | "Import"
 
 // Statements and Program
 export interface Statement {
@@ -55,7 +57,14 @@ export interface IfStatement extends Statement {
   condition: boolean
   body: Statement[]
 }
-
+export interface Export extends Statement {
+  kind: "Export",
+  name: string,
+}
+export interface Import extends Statement {
+  kind: "Import",
+  _package: string,
+}
 
 
 // Expressions

@@ -1,0 +1,11 @@
+print("Welcome to Boron's first module !!")
+func WRITEFILE(fileName, contents) {
+  writeFile(fileName, contents)
+  "null"
+}
+func READFILE(fileName) {
+  let contents = readFile(fileName);
+  contents
+}
+let name = "nav343";
+print(name)

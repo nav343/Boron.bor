@@ -1,6 +1,6 @@
-$ Write a program to swap the values of 2 variables (10 and 20)
+$ Write a program to swap the values of 2 variables (10 and 30)
 let x = 10;
-let y = 20;
+let y = 30;
 
 let swap = x;
 x = y

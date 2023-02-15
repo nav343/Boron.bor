@@ -1,4 +1,4 @@
-import { AssignmentExpr, BinExpr, CallExpr, Float, FunctionDeclaration, Identifier, IfStatement, Int, Object, Program, Statement, String, VariableDeclaration, WhileDeclaration } from "../frontend/ast";
+import { AssignmentExpr, BinExpr, CallExpr, Export, Float, FunctionDeclaration, Identifier, IfStatement, Import, Int, Object, Program, Statement, String, VariableDeclaration, WhileDeclaration } from "../frontend/ast";
 import { BOLD, RED, RESET } from "../frontend/utils/colors";
 import Environment from "./env";
 import { evalAssignmentExpr } from "./evals/assignment";
@@ -7,6 +7,7 @@ import { evalCallExpr } from "./evals/callExpr";
 import { evalFuncDeclaration } from "./evals/funcDeclaration";
 import { evalIfStatement } from "./evals/ifElseStatement";
 import { evalObjectExpr } from "./evals/object";
+import { evalExportStatement, evalImportStatement } from "./evals/packageDeclaration";
 import { evalProgram } from "./evals/program";
 import { evalVarDeclaration } from "./evals/varDeclaration";
 import { evalWhileDeclaration } from "./evals/whileDeclaration";
@@ -15,6 +16,10 @@ import { MKNULL, NumberValue, RuntimeValues, StringValue } from "./value";
 function evalIdentifier(identifier: Identifier, env: Environment): RuntimeValues {
   const val = env.loopupVar(identifier.symbol)
   return val
+}
+
+function pkgEnv(env: Environment): Environment {
+  return new Environment(env)
 }
 
 export function evaluate(astNode: Statement, env: Environment): RuntimeValues {
@@ -42,7 +47,12 @@ export function evaluate(astNode: Statement, env: Environment): RuntimeValues {
     case "WhileDeclaration":
       return evalWhileDeclaration(astNode as WhileDeclaration, env)
     case "IfStatement":
-      return evalIfStatement(astNode as IfStatement)
+      return evalIfStatement(astNode as IfStatement, env)
+    // packages
+    case "Export":
+      return evalExportStatement(astNode as Export, pkgEnv(env), env)
+    case "Import":
+      return evalImportStatement(astNode as Import, env)
 
     case "AssignmentExpr":
       return evalAssignmentExpr(astNode as AssignmentExpr, env)

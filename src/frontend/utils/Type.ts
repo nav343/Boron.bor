@@ -38,7 +38,9 @@ export enum Type {
   CONST,
   FUNC,
   WHILE,
-
+  EXPORT,
+  IMPORT,
+  FROM,
 
   TRUE,
 }
@@ -50,5 +52,8 @@ export const KEYWORDS: Record<string, Type> = {
   "const": Type.CONST,
   "func": Type.FUNC,
   "while": Type.WHILE,
+  "import": Type.IMPORT,
+  "export": Type.EXPORT,
+  "from": Type.FROM,
   "TRUE": Type.TRUE,
 }
