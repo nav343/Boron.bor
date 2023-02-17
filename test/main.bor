@@ -1,3 +1,5 @@
-import "./test/nice.bor"
-import "./test/modules/helloWorld.bor"
-print(nice)
+let info = {
+  name: "nav343",
+  age: 200
+};
+print(info.name, info.age)

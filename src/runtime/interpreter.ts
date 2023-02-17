@@ -1,4 +1,4 @@
-import { AssignmentExpr, BinExpr, CallExpr, Export, Float, FunctionDeclaration, Identifier, IfStatement, Import, Int, Object, Program, Statement, String, VariableDeclaration, WhileDeclaration } from "../frontend/ast";
+import { AssignmentExpr, BinExpr, CallExpr, Export, Float, FunctionDeclaration, Identifier, IfStatement, Import, Int, MemberExpr, Object, Program, Statement, String, VariableDeclaration, WhileDeclaration } from "../frontend/ast";
 import { BOLD, RED, RESET } from "../frontend/utils/colors";
 import Environment from "./env";
 import { evalAssignmentExpr } from "./evals/assignment";
@@ -6,6 +6,7 @@ import { evalBinExpr } from "./evals/binExpr";
 import { evalCallExpr } from "./evals/callExpr";
 import { evalFuncDeclaration } from "./evals/funcDeclaration";
 import { evalIfStatement } from "./evals/ifElseStatement";
+import { evalMemberExpr } from "./evals/memberExpr";
 import { evalObjectExpr } from "./evals/object";
 import { evalExportStatement, evalImportStatement } from "./evals/packageDeclaration";
 import { evalProgram } from "./evals/program";
@@ -62,6 +63,8 @@ export function evaluate(astNode: Statement, env: Environment): RuntimeValues {
 
     case "CallExpr":
       return evalCallExpr(astNode as CallExpr, env)
+    case "MemberExpr":
+      return evalMemberExpr(astNode as MemberExpr, env)
     default:
       console.error(RED + BOLD + "Undefined node " + astNode.kind + RESET)
       return { type: 'null' }
