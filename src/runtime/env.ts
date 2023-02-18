@@ -1,8 +1,9 @@
 import { exit } from "process"
-import { MKNATIVEFN, MKNULL, MKSTRING, RuntimeValues } from "./value"
+import { MKNATIVEFN, MKNULL, MKSTRING, RuntimeValues, StringValue } from "./value"
 import { MKBOOL, MKNUMBER } from "../runtime/value";
 import { readFileSync, writeFileSync } from "fs";
 import { BOLD, RED, RESET, YELLOW } from "../frontend/utils/colors";
+const prompt = require('prompt-sync')()
 
 export function createGlobalScope() {
   const env = new Environment()
@@ -16,7 +17,7 @@ export function createGlobalScope() {
     args.map((result: any) => {
       if (result.type === "object") console.log(result.properties)
       else if (result.type === 'null') console.log(null)
-      else if (result.type === 'number') console.log(result.value)
+      else if (result.type === 'number' || result.type === 'float') console.log(result.value)
       else if (result.type === 'string') {
         if (result.value === '' || result.value === ' ') { return }
         else {
@@ -26,6 +27,27 @@ export function createGlobalScope() {
       else console.log(result)
     })
     return MKNULL()
+  }), true)
+
+  env.declareVariable('typeof', MKNATIVEFN((args) => {
+    const obj: any = []
+    if (args.length == 0) { console.log(RED + BOLD + "Expected 1 value" + RESET); exit(1) }
+    args.map(res => {
+      obj.push(res.type)
+    })
+    return obj.join(' ')
+  }), true)
+
+  // Input function and hidden input function
+  env.declareVariable("input", MKNATIVEFN((args) => {
+    if (args.length != 1) { console.log(RED + BOLD + `Expected ${YELLOW + BOLD + "ONE" + RESET + RED + BOLD} argument, but got ${YELLOW + BOLD + args.length}` + RESET); exit(1) }
+    const res = prompt((args[0] as any).value)
+    return res
+  }), true)
+  env.declareVariable("getPass", MKNATIVEFN((args) => {
+    if (args.length != 1) { console.log(RED + BOLD + `Expected ${YELLOW + BOLD + "ONE" + RESET + RED + BOLD} argument, but got ${YELLOW + BOLD + args.length}` + RESET); exit(1) }
+    const res: StringValue = prompt((args[0] as any).value, { echo: "*" })
+    return res
   }), true)
 
   // Just for fun, you can override this function

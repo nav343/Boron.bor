@@ -60,7 +60,6 @@ export default class Parser {
       case Type.IMPORT:
         return this.parseImportStatement()
 
-      // TODO: IDK HOW TO FIX THIS :(, cannot get the value of an identifier
       case Type.IF:
         return this.parseIfStatement()
       default:
@@ -83,23 +82,23 @@ export default class Parser {
   }
 
   private parseIfStatement(): Statement {
-    let op: string | null = ''
+    let op0: string | null = ''
     this.advance()
 
     // CONDITION START
     this.expect(Type.OPENPAR, "Expected open parenthesis after 'if' keyword")
-    const val1 = this.expect(this.at().tokenType, "Expecting identifier")
+    const val1 = this.expect(this.at().tokenType, "Expecting identifier or a number")
     if (this.at().tokenType === Type.Equals ||
       this.at().tokenType === Type.GR ||
       this.at().tokenType === Type.SR ||
       this.at().tokenType === Type.BANG
-    ) { op = this.at().value; this.advance() } else {
+    ) { op0 = this.at().value; this.advance() } else {
       console.log(RED + BOLD + `Expecting one of these: ${YELLOW + ">, <, =, !" + RESET + RED + BOLD}. But got ${YELLOW + this.at().value + RESET + RED + BOLD}` + RESET)
       exit(1)
     }
     const op1 = this.expect(Type.Equals, "Expecting double equals").value
+    const op = op0 + op1
     const val2 = this.expect(this.at().tokenType, "Idk wut to check for?")
-    const condition = eval(`${val1.value} ${op}${op1} ${val2.value}`)
     this.expect(Type.CLOSEPAR, "Expecting closing parenthesis")
     // CONDITION END
 
@@ -112,7 +111,7 @@ export default class Parser {
     this.expect(Type.CLOSECURLY, 'Expected a closing curly bracket "}" after the function body.')
     // BODY END
 
-    return { kind: 'IfStatement', condition, body } as IfStatement
+    return { kind: 'IfStatement', valueOne: val1, op, valueTwo: val2, body } as IfStatement
   }
 
   // while (condition) -> { body }

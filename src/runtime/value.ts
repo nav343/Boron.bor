@@ -4,6 +4,7 @@ import Environment from "./env"
 export type ValueTypes =
   "null" |
   "number" |
+  "float" |
   "boolean" |
   "object" |
   "nativeFn" |
@@ -25,7 +26,7 @@ export interface NullValue extends RuntimeValues {
 }
 
 export interface NumberValue extends RuntimeValues {
-  type: "number",
+  type: "number" | "float",
   value: number
 }
 
@@ -33,7 +34,6 @@ export interface StringValue extends RuntimeValues {
   type: "string",
   value: string
 }
-
 
 export interface BooleanValue extends RuntimeValues {
   type: "boolean",

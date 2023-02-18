@@ -28,7 +28,7 @@ export function evaluate(astNode: Statement, env: Environment): RuntimeValues {
     case "Int":
       return { value: ((astNode as Int).value), type: 'number' } as NumberValue
     case "Float":
-      return { value: ((astNode as Float).value), type: 'number' } as NumberValue
+      return { value: ((astNode as Float).value), type: 'float' } as NumberValue
     case "String":
       return { value: ((astNode as String).value), type: 'string' } as StringValue
     case "Null":

@@ -1,5 +1,3 @@
-let info = {
-  name: "nav343",
-  age: 200
-};
-print(info.name, info.age)
+let name = input("Enter a user name: ");
+let pass = getPass("Enter a (not real) password: ");
+print(name, pass)

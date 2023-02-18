@@ -1,3 +1,5 @@
+import { Token } from "./utils/Token"
+
 export type NodeType = "Program"
   | "BinExpr"
   | "Identifier"
@@ -54,7 +56,9 @@ export interface WhileDeclaration extends Statement {
 }
 export interface IfStatement extends Statement {
   kind: "IfStatement",
-  condition: boolean
+  valueOne: Token
+  valueTwo: Token
+  op: string
   body: Statement[]
 }
 export interface Export extends Statement {
@@ -111,7 +115,6 @@ export interface While extends Expr {
   kind: "While"
   keyword: string
 }
-
 
 // Numbers
 export interface Int extends Expr {
