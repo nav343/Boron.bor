@@ -1,3 +1,2 @@
-let name = input("Enter a user name: ");
-let pass = getPass("Enter a (not real) password: ");
-print(name, pass)
+const test = getPass("> ");
+print(test)

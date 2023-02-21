@@ -51,7 +51,9 @@ export interface FunctionDeclaration extends Statement {
 }
 export interface WhileDeclaration extends Statement {
   kind: "WhileDeclaration",
-  condition: boolean
+  valueOne: Token
+  valueTwo: Token
+  op: string
   body: Statement[]
 }
 export interface IfStatement extends Statement {

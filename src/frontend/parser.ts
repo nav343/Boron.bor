@@ -1,6 +1,6 @@
 import { exit } from 'process'
 import { NumberValue } from '../runtime/value'
-import { Statement, Program, Identifier, Expr, Int, Float, Let, BinExpr, Null, Const, VariableDeclaration, AssignmentExpr, Property, Object, CallExpr, MemberExpr, String, FunctionDeclaration, While, IfStatement, Export, Import } from './ast'
+import { Statement, Program, Identifier, Expr, Int, Float, Let, BinExpr, Null, Const, VariableDeclaration, AssignmentExpr, Property, Object, CallExpr, MemberExpr, String, FunctionDeclaration, While, IfStatement, Export, Import, WhileDeclaration } from './ast'
 import { Lexer } from './lexer'
 import { RED, BOLD, RESET, WHITE, YELLOW } from './utils/colors'
 import { Token } from './utils/Token'
@@ -62,6 +62,8 @@ export default class Parser {
 
       case Type.IF:
         return this.parseIfStatement()
+      case Type.WHILE:
+        return this.parseWhileDeclaration()
       default:
         return this.parseExpr()
     }
@@ -116,16 +118,23 @@ export default class Parser {
 
   // while (condition) -> { body }
   // TODO: this is wayyy harder than expected...... so i'm gonna skip this for now haha
-  /* private parseWhileDeclaration(): Statement {
+  private parseWhileDeclaration(): Statement {
+    let op0 = ''
     this.advance()
     this.expect(Type.OPENPAR, "Expected open parenthesis after while keyword")
-
-    //condition
-    const condition = this.parseCondition()
-    console.log(condition)
-
+    const val1 = this.expect(this.at().tokenType, "Expecting identifier or a number")
+    if (this.at().tokenType === Type.Equals ||
+      this.at().tokenType === Type.GR ||
+      this.at().tokenType === Type.SR ||
+      this.at().tokenType === Type.BANG
+    ) { op0 = this.at().value; this.advance() } else {
+      console.log(RED + BOLD + `Expecting one of these: ${YELLOW + ">, <, =, !" + RESET + RED + BOLD}. But got ${YELLOW + this.at().value + RESET + RED + BOLD}` + RESET)
+      exit(1)
+    }
+    const op1 = this.expect(Type.Equals, "Expecting double equals").value
+    const op = op0 + op1
+    const val2 = this.expect(this.at().tokenType, "Idk wut to check for?")
     this.expect(Type.CLOSEPAR, "Expected closing parenthesis after condition")
-    this.expect(Type.GR, "Expected > after condition closing parenthesis")
 
     this.expect(Type.OPENCURLY, `Expected a while loop body`)
     const body: Statement[] = []
@@ -136,11 +145,13 @@ export default class Parser {
 
     const _while = {
       kind: 'WhileDeclaration',
-      condition,
+      valueOne: val1,
+      op,
+      valueTwo: val2,
       body
     } as WhileDeclaration
     return _while
-  } */
+  }
 
   private parseFuncDeclaration(): Statement {
     this.advance()

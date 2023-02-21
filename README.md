@@ -1,10 +1,19 @@
-<p align="center">
-<img src="https://github.com/nav343/Boron.bor/blob/main/assets/boron_logo.png" style="border-radius: 300px" width=200 height=200></img>
-</p>
-
 # Boron
 ## ✨Boron V1 is finally here!!
 ## _Yet another programming language written in Typescript_
+
+***
+
+# Supported Systems
+| OS   | Status |
+|------|-------|
+| Windows | ❓ |
+| Mac OS | ❓ |
+| Linux | ✅  (should work...)|
+**❓ -> Not  tested  yet**
+**✅  >  Works**
+
+***
 
 ## Features
 - Easy syntax. 
@@ -16,6 +25,8 @@
 - [_PRODUCTION_] Boron requires `pkg` for building an executable
 - [_DEV_]        Boron requires `@types/node @types/prompt-sync` and `prompt-sync` for running with NodeJS. Run `yarn install` to install them.
 
+***
+
 ## Editor Setup
 
 | Plugin | README |
@@ -24,6 +35,8 @@
 
 ## Docs & Installation guide
 Read the official docs [here][docs] on Github Wiki
+
+***
 
 ## Folder Structure
 ```
@@ -52,6 +65,8 @@ Read the official docs [here][docs] on Github Wiki
 └── test/
     └── main.bor
 ```
+
+***
 
 ## License
 MIT

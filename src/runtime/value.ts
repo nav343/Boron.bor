@@ -89,3 +89,6 @@ export function MKBOOL(val: boolean) {
 export function MKNATIVEFN(call: FunctionCall) {
   return { type: 'nativeFn', call } as NativeFnValue
 }
+export function MKNATIVEOBJ(obj: ObjectValue) {
+  return { type: 'object', properties: obj.properties } as ObjectValue
+}
