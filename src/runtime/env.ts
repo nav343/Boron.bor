@@ -1,22 +1,9 @@
 import { exit } from "process"
 import { MKNATIVEFN, MKNATIVEOBJ, MKNULL, MKSTRING, RuntimeValues, StringValue } from "./value"
 import { MKBOOL, MKNUMBER } from "../runtime/value";
-import { openSync, readFileSync, readSync, writeFileSync, writeSync } from "fs";
+import { readFileSync, writeFileSync } from "fs";
 import { BOLD, RED, RESET, YELLOW } from "../frontend/utils/colors";
-
-let stdin = openSync("/dev/stdin", "rs");
-
-function prompt(msg: string): string {
-  writeSync(process.stdout.fd, msg);
-  let s = '';
-  let buf = Buffer.alloc(1);
-  readSync(stdin, buf, 0, 1, null);
-  while ((buf[0] != 10) && (buf[0] != 13)) {
-    s += buf;
-    readSync(stdin, buf, 0, 1, null);
-  }
-  return s;
-}
+const prompt = require("prompt-sync")()
 
 export function createGlobalScope() {
   const env = new Environment()
@@ -61,17 +48,22 @@ export function createGlobalScope() {
     return res
   }), true)
   env.declareVariable("getPass", MKNATIVEFN((args) => {
-    if (args.length != 1) { console.log(RED + BOLD + `Expected ${YELLOW + BOLD + "ONE" + RESET + RED + BOLD} argument, but got ${YELLOW + BOLD + args.length}` + RESET); exit(1) }
-    const res = prompt((args[0] as StringValue).value)
-    res.replace(/./, '*')
+    if (args.length != 2) { console.log(RED + BOLD + `Expected ${YELLOW + BOLD + "TWO" + RESET + RED + BOLD} argument, but got ${YELLOW + BOLD + args.length}` + RESET); exit(1) }
+    const msg = (args[0] as StringValue).value
+    const replaceSymbol = (args[1] as StringValue).value
+    const res = prompt(msg, { echo: replaceSymbol === '' ? '*' : replaceSymbol })
     return res as any
   }), true)
 
+  const testProp = new Map<string, RuntimeValues>().set("hi", MKSTRING("hello"))
   env.declareVariable('thread', MKNATIVEOBJ({
     type: 'object',
     properties: new Map<string, RuntimeValues>()
       .set("pwd", MKSTRING(process.cwd()))
-      .set("test", MKNATIVEFN(() => { console.log("hi"); return { type: 'null' } }))
+      .set("test", MKNATIVEOBJ({
+        type: 'object',
+        properties: testProp
+      }))
   }), true)
 
   // Just for fun, you can override this function

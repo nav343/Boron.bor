@@ -1,2 +1,11 @@
-const test = getPass("> ");
-print(test)
+func welcomeNewUser(name, otherInfo) {
+  print(name)
+  print(otherInfo)
+}
+const otherInfo = {
+  age: 123,
+  hobby: "making languages"
+};
+
+welcomeNewUser("nav343", otherInfo.age)
+welcomeNewUser("nav343", otherInfo.hobby)
