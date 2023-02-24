@@ -1,5 +1,5 @@
-let nice = "helloworld";
-func currentTimeFromImportedFile () {
-  TIME()
+func main(a,b) {
+  print(a,b)
 }
-export(nice)
+
+export(main)

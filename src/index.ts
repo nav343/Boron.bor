@@ -1,7 +1,7 @@
 import { readFileSync } from "fs";
 import prompt from 'prompt-sync'
 import Parser from "./frontend/parser";
-import { createGlobalScope } from "./runtime/env";
+import { createGlobalScope } from "./frontend/utils/createGlobalScope";
 import { evaluate } from "./runtime/interpreter";
 
 function exec() {
@@ -24,10 +24,6 @@ function exec() {
         ])
       }).toString()
 
-      if (code === 'exit()') {
-        console.clear()
-        break
-      }
       const program = parser.genAst(code)
       evaluate(program, env)
     }
@@ -36,8 +32,8 @@ function exec() {
 
 function complete(commands: string[]) {
   return function(str: string) {
-    var i;
-    var ret = [];
+    let i;
+    let ret = [];
     for (i = 0; i < commands.length; i++) {
       if (commands[i].indexOf(str) == 0)
         ret.push(commands[i]);

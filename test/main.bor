@@ -1,11 +1,9 @@
-func welcomeNewUser(name, otherInfo) {
-  print(name)
-  print(otherInfo)
+let test = input("> ");
+if (test == "nav343") {
+  print("NICE")
+} 
+else if (test == "nav") {
+  print("OK")
+} else {
+  print("NOT COOL")
 }
-const otherInfo = {
-  age: 123,
-  hobby: "making languages"
-};
-
-welcomeNewUser("nav343", otherInfo.age)
-welcomeNewUser("nav343", otherInfo.hobby)

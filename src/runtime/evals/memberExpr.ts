@@ -11,7 +11,7 @@ export function evalMemberExpr(astNode: MemberExpr, env: Environment): RuntimeVa
     const res: any = ((obj as ObjectValue).properties.get(varName) as any).value
     return res
   } catch (err) {
-    console.log(RED + BOLD + `${YELLOW + BOLD + varName + RESET + RED + BOLD} does not exist on property ${YELLOW + BOLD + (astNode.object as Identifier).symbol}` + RESET)
+    console.log(RED + BOLD + `${YELLOW + BOLD + varName + RESET + RED + BOLD} does not exist in object ${YELLOW + BOLD + (astNode.object as Identifier).symbol}` + RESET)
     exit(1)
   }
 }

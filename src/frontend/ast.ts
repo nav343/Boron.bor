@@ -9,6 +9,7 @@ export type NodeType = "Program"
   | "WhileDeclaration"
   | "IfStatement"
   | "ElseStatement"
+  | "ElseStatement"
   | "AssignmentExpr"
   | "FunctionCall"
   | "CallExpr"
@@ -61,6 +62,10 @@ export interface IfStatement extends Statement {
   valueOne: Token
   valueTwo: Token
   op: string
+  body: Statement[]
+}
+export interface ElseStatement extends Statement {
+  kind: "ElseStatement",
   body: Statement[]
 }
 export interface Export extends Statement {

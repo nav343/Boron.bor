@@ -34,12 +34,13 @@ export enum Type {
   // Keywords
   LET,
   IF,
+  ELSE,
   NULL,
   CONST,
   FUNC,
   WHILE,
-  EXPORT,
   IMPORT,
+  EXPORT,
   FROM,
 
   TRUE,
@@ -48,6 +49,7 @@ export enum Type {
 export const KEYWORDS: Record<string, Type> = {
   "let": Type.LET,
   "if": Type.IF,
+  "else": Type.ELSE,
   "null": Type.NULL,
   "const": Type.CONST,
   "func": Type.FUNC,

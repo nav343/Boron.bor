@@ -1,11 +1,11 @@
-import { AssignmentExpr, BinExpr, CallExpr, Export, Float, FunctionDeclaration, Identifier, IfStatement, Import, Int, MemberExpr, Object, Program, Statement, String, VariableDeclaration, WhileDeclaration } from "../frontend/ast";
+import { AssignmentExpr, BinExpr, CallExpr, ElseStatement, Export, Float, FunctionDeclaration, Identifier, IfStatement, Import, Int, MemberExpr, Object, Program, Statement, String, VariableDeclaration, WhileDeclaration } from "../frontend/ast";
 import { BOLD, RED, RESET } from "../frontend/utils/colors";
 import Environment from "./env";
 import { evalAssignmentExpr } from "./evals/assignment";
 import { evalBinExpr } from "./evals/binExpr";
 import { evalCallExpr } from "./evals/callExpr";
 import { evalFuncDeclaration } from "./evals/funcDeclaration";
-import { evalIfStatement } from "./evals/ifElseStatement";
+import { evalElseStatement, evalIfStatement } from "./evals/ifElseStatement";
 import { evalMemberExpr } from "./evals/memberExpr";
 import { evalObjectExpr } from "./evals/object";
 import { evalExportStatement, evalImportStatement } from "./evals/packageDeclaration";
@@ -49,6 +49,8 @@ export function evaluate(astNode: Statement, env: Environment): RuntimeValues {
       return evalWhileDeclaration(astNode as WhileDeclaration, env)
     case "IfStatement":
       return evalIfStatement(astNode as IfStatement, env)
+    case "ElseStatement":
+      return evalElseStatement(astNode as ElseStatement, env)
     // packages
     case "Export":
       return evalExportStatement(astNode as Export, pkgEnv(env), env)
