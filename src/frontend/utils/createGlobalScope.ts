@@ -23,7 +23,7 @@ export function createGlobalScope() {
     }
     if (id === 1 || id === 0) { process.exit(id) }
     else {
-      console.log(RED + BOLD + `Expected 0 or 1 but got ${YELLOW + BOLD + id}` + RESET)
+      console.log(RED + BOLD + `Expected 0 or 1 but got ${YELLOW + BOLD + id + RESET}` + RESET)
       exit(1)
     }
   }), true)
