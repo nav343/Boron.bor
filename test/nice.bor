@@ -1,5 +1,1 @@
-func main(a,b) {
-  print(a,b)
-}
-
-export(main)
+getPass

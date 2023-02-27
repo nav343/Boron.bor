@@ -13,6 +13,8 @@ export default class Parser {
     return this.tokens[0].tokenType != Type.EOF
   }
 
+  private ifInitialized: boolean = false
+
   constructor(code?: string) { this.code = code }
 
   private expect(type: Type, error: any) {
@@ -86,6 +88,7 @@ export default class Parser {
   }
 
   private parseIfStatement(): Statement {
+    this.ifInitialized = true
     let op0: string | null = ''
     this.advance()
 
@@ -110,6 +113,10 @@ export default class Parser {
   }
 
   private parseElseStatement(): Statement {
+    if (!this.ifInitialized) {
+      console.log(RED + BOLD + "No if statement found" + RESET);
+      exit(1)
+    }
     this.advance()
     if (this.at().tokenType == Type.IF) {
       return this.parseIfStatement()

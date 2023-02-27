@@ -3,6 +3,7 @@ import Environment from "../env";
 import { evaluate } from "../interpreter";
 import { MKBOOL, MKNULL, RuntimeValues } from "../value";
 
+let ifValue: boolean = false;
 export function evalIfStatement(astNode: IfStatement, env: Environment): RuntimeValues {
   const val1 = (
     astNode.valueOne.tokenType === 0 ? (env.loopupVar(astNode.valueOne.value) as any).value :
@@ -17,13 +18,13 @@ export function evalIfStatement(astNode: IfStatement, env: Environment): Runtime
   )
   switch (astNode.op) {
     case '==':
-      if (val1 == val2) { astNode.body.forEach(statement => evaluate(statement, env)); return MKBOOL(true) } else { return MKBOOL(false) }
+      if (val1 == val2) { ifValue = true; astNode.body.forEach(statement => evaluate(statement, env)); return MKBOOL(true) } else { return MKBOOL(false) }
     case '<=':
-      if (val1 <= val2) { astNode.body.forEach(statement => evaluate(statement, env)); return MKBOOL(true) } else { return MKBOOL(false) }
+      if (val1 <= val2) { ifValue = true; astNode.body.forEach(statement => evaluate(statement, env)); return MKBOOL(true) } else { return MKBOOL(false) }
     case '>=':
-      if (val1 >= val2) { astNode.body.forEach(statement => evaluate(statement, env)); return MKBOOL(true) } else { return MKBOOL(false) }
+      if (val1 >= val2) { ifValue = true; astNode.body.forEach(statement => evaluate(statement, env)); return MKBOOL(true) } else { return MKBOOL(false) }
     case '!=':
-      if (val1 !== val2) { astNode.body.forEach(statement => evaluate(statement, env)); return MKBOOL(true) } else { return MKBOOL(false) }
+      if (val1 !== val2) { ifValue = true; astNode.body.forEach(statement => evaluate(statement, env)); return MKBOOL(true) } else { return MKBOOL(false) }
     default:
       return MKNULL()
   }
@@ -31,5 +32,9 @@ export function evalIfStatement(astNode: IfStatement, env: Environment): Runtime
 
 
 export function evalElseStatement(astNode: ElseStatement, env: Environment): RuntimeValues {
-  astNode.body.map(statement => evaluate(statement, env)); return MKNULL()
+  if (ifValue === false) {
+    astNode.body.map(statement => evaluate(statement, env)); return MKNULL()
+  } else {
+    return MKNULL()
+  }
 }

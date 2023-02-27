@@ -1,18 +1,44 @@
-import { readFileSync } from "fs";
+import { readFile } from "fs/promises";
 import prompt from 'prompt-sync'
 import Parser from "./frontend/parser";
+import { BOLD, RED, RESET, WHITE, YELLOW } from "./frontend/utils/colors";
 import { createGlobalScope } from "./frontend/utils/createGlobalScope";
+import { decorator } from "./frontend/utils/helpers";
 import { evaluate } from "./runtime/interpreter";
+
+interface FileNotFound {
+  errno: number
+  code: string
+  path: string
+  syscall: string
+}
 
 function exec() {
   const path = process.argv[2]
   const env = createGlobalScope()
 
   if (typeof path === 'string') {
-    const code = readFileSync(path, { encoding: 'utf8' }).toString()
-    const parser = new Parser(code)
-    const program = parser.genAst(code)
-    evaluate(program, env)
+    readFile(path, { encoding: 'utf8' }).then((raw) => {
+      const code = raw.toString()
+      const parser = new Parser(code)
+      const program = parser.genAst(code)
+      evaluate(program, env)
+    }).catch((err: FileNotFound) => {
+      if (err.errno == -2) {
+
+        // msg
+        const errNo = `${YELLOW + BOLD} Code: ${err.errno + RESET}`
+        const file = `\n${YELLOW + BOLD} File: ${err.path + RESET}`
+        const syscall = `\n${YELLOW + BOLD} SysCall: ${err.syscall + RESET}`
+        const note = `\n${WHITE} Please check the file name and try again. ${RESET}`
+
+        const errorMsg = errNo + file + syscall + note;
+        console.log(RED + BOLD + "File not found.")
+        console.log(RED + BOLD + decorator() + RESET)
+        console.log(errorMsg)
+        console.log(RED + BOLD + decorator() + RESET)
+      }
+    })
   } else {
     console.clear()
     const parser = new Parser()

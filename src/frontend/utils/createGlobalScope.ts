@@ -4,6 +4,7 @@ import { readFileSync, writeFileSync } from "fs";
 import Environment from '../../runtime/env';
 import { exit } from "process"
 import { BOLD, RED, RESET, YELLOW } from "./colors";
+//import { exec } from 'child_process';
 const prompt = require("prompt-sync")()
 
 export function createGlobalScope() {
@@ -27,6 +28,7 @@ export function createGlobalScope() {
       exit(1)
     }
   }), true)
+
   env.declareVariable('print', MKNATIVEFN((args) => {
     args.map((result: any) => {
       if (result.type === "object") console.log(result.properties)
@@ -41,6 +43,25 @@ export function createGlobalScope() {
       }
       else console.log(result)
     })
+    return MKNULL()
+  }), true)
+
+  /* env.declareVariable('system', MKNATIVEFN((args) => {
+    if (args.length != 1) { console.log(RED + BOLD + "Expecting 1 argument." + RESET); exit(1) }
+    const cmd = (args[0] as StringValue).value
+    exec(cmd, (err, output) => {
+      const errMsg = `Error: ${err?.code}.\nName: ${err?.name}.\nDetails: ${err?.message}.\nCause: ${err?.cause}`
+      if (err) { return MKSTRING(errMsg) }
+      else {
+        return MKSTRING(output)
+      }
+    })
+    exit(0)
+  }), true) */
+
+  env.declareVariable('toLowerCase', MKNATIVEFN((args) => {
+    if (args.length == 0) { console.log(RED + BOLD + "Expecing a" + RESET); exit(1) }
+    args.map((_var) => { (_var as StringValue).value })
     return MKNULL()
   }), true)
 

@@ -2,6 +2,7 @@ let test = input("> ");
 if (test == "nav343") {
   print("NICE")
 } 
+
 else if (test == "nav") {
   print("OK")
 } else {
