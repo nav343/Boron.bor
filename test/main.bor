@@ -1,10 +1,8 @@
-let test = input("> ");
-if (test == "nav343") {
-  print("NICE")
-} 
+const test = {
+  name: "nav343"
+};
 
-else if (test == "nav") {
-  print("OK")
-} else {
-  print("NOT COOL")
-}
+print(test[name])
+let a = 'hi';
+print('hi')
+print(a)

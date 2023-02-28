@@ -122,6 +122,19 @@ export class Lexer {
           this.next()
         }
 
+        else if (this.cc === "'") {
+          let str: string = ''
+          this.next()
+          str += this.cc
+
+          while (this.cc != "'") {
+            str += this.cc
+            this.next()
+          }
+          tokens.push(token(Type.STRING, str.replace(str[0], '')))
+          this.next()
+        }
+
         else if (isAlpha(this.cc)) {
           let identifier = ''
 
