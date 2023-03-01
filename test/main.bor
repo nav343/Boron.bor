@@ -1,8 +1,20 @@
-const test = {
-  name: "nav343"
-};
+func init() {
+  clearScr() $clears the screen and makes it look like a curses app
+  const width = thread.width;
+  const dashes = "-" * width;
 
-print(test[name])
-let a = 'hi';
-print('hi')
-print(a)
+  Color({ color: "green" }, dashes)
+  Color({ color: "green" }, "Welcome to File Reader !!.")
+  const fileName = input("Enter a file name: ");
+  if (fileName == "") { Color({ color: "red" }, "Please enter a valid file name") }
+  else if (fileName == " ") { Color({ color: "red" }, "Please enter a valid file name") }
+  else {
+    clearScr()
+    Color({ color: "white" }, "Reading........")
+    const contents = readFile(fileName);
+    Color({ color: "yellow" }, contents)
+  }
+
+  Color({ color: "green" }, dashes)
+}
+init()

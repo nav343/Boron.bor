@@ -1,9 +1,9 @@
-import { MKNATIVEFN, MKNATIVEOBJ, MKNULL, MKSTRING, NumberValue, RuntimeValues, StringValue } from '../../runtime/value'
+import { MKNATIVEFN, MKNATIVEOBJ, MKNULL, MKSTRING, NumberValue, ObjectValue, RuntimeValues, StringValue } from '../../runtime/value'
 import { MKBOOL, MKNUMBER } from "../../runtime/value";
 import { readFileSync, writeFileSync } from "fs";
 import Environment from '../../runtime/env';
 import { exit } from "process"
-import { BOLD, RED, RESET, YELLOW } from "./colors";
+import { BOLD, RED, RESET, WHITE, YELLOW, GREEN } from "./colors";
 //import { exec } from 'child_process';
 const prompt = require("prompt-sync")()
 
@@ -39,6 +39,30 @@ export function createGlobalScope() {
         if (result.value === '' || result.value === ' ') { return }
         else {
           console.log(result.value)
+        }
+      }
+      else console.log(result)
+    })
+    return MKNULL()
+  }), true)
+
+  env.declareVariable('Color', MKNATIVEFN((args) => {
+    if (args[0].type != 'object') { console.log(RED + BOLD + `Expected color object but got ${args[0].type}` + RESET); exit(1) }
+    const colorsObj: any = { RED, YELLOW, WHITE, GREEN }
+    const color = (args[0] as ObjectValue).properties.get("color")
+    const userColorValue = (color as StringValue).value.toUpperCase()
+    const colorValue: string = colorsObj[userColorValue]
+    if (color?.type != 'string') { console.log(RED + BOLD + `Cannot use ${color?.type} as a color type.` + RESET); exit(1) }
+
+    args.slice(1).map((result: any) => {
+      if (result.type === "object") console.log(colorValue + result.properties + RESET)
+      else if (result.type === 'null') console.log(colorValue + null + RESET)
+      else if (result.type === 'boolean') console.log(colorValue + result.value + RESET)
+      else if (result.type === 'number' || result.type === 'float') console.log(colorValue + result.value + RESET)
+      else if (result.type === 'string') {
+        if (result.value === '' || result.value === ' ') { return }
+        else {
+          console.log(colorValue + result.value + RESET)
         }
       }
       else console.log(result)
@@ -88,15 +112,12 @@ export function createGlobalScope() {
     return MKSTRING(res)
   }), true)
 
-  const testProp = new Map<string, RuntimeValues>().set("hi", MKSTRING("hello"))
+  //const testProp = new Map<string, RuntimeValues>().set("hi", MKSTRING("hello"))
   env.declareVariable('thread', MKNATIVEOBJ({
     type: 'object',
     properties: new Map<string, RuntimeValues>()
       .set("pwd", MKSTRING(process.cwd()))
-      .set("test", MKNATIVEOBJ({
-        type: 'object',
-        properties: testProp
-      }))
+      .set("width", MKNUMBER(process.stdout.columns))
   }), true)
 
   // Just for fun, you can override this function
@@ -152,7 +173,6 @@ export function createGlobalScope() {
     console.clear()
     return MKNULL()
   }), true)
-
 
   return env
 }
