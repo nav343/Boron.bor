@@ -1,2 +1,2 @@
-print(indexAt("nav343", 2))
+print(indexAt("nav3423", 2))
 print(indexAt(toLowerCase("NAV343"), 2))
