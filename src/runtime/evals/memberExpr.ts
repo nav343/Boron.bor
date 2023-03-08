@@ -1,6 +1,6 @@
 import { exit } from "process";
+import { SyntaxError } from "../../error/syntaxError";
 import { Identifier, MemberExpr } from "../../frontend/ast";
-import { BOLD, RED, RESET, YELLOW } from "../../frontend/utils/colors";
 import Environment from "../env";
 import { ObjectValue, RuntimeValues } from "../value";
 
@@ -11,7 +11,7 @@ export function evalMemberExpr(astNode: MemberExpr, env: Environment): RuntimeVa
     const res: any = ((obj as ObjectValue).properties.get(varName) as any).value
     return res
   } catch (err) {
-    console.log(RED + BOLD + `${YELLOW + BOLD + varName + RESET + RED + BOLD} does not exist in object ${YELLOW + BOLD + (astNode.object as Identifier).symbol}` + RESET)
+    new SyntaxError(`${varName} does not exit in object ${(astNode.object as Identifier).symbol}`, null)
     exit(1)
   }
 }

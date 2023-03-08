@@ -5,7 +5,7 @@ import { RuntimeValues } from "../value";
 
 export function evalAssignmentExpr(node: AssignmentExpr, env: Environment): RuntimeValues {
   if (node.assign.kind != 'Identifier') {
-    console.log(`Invalid Syntax. Cannot assign with LHS being ${node.assign.kind}`)
+    new SyntaxError(`Cannot assign to variable with Left hand being ${node.assign.kind}`)
   }
 
   const varName = (node.assign as Identifier).symbol

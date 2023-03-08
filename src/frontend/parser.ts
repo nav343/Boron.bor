@@ -1,8 +1,9 @@
 import { exit } from 'process'
+import { SyntaxError } from '../error/syntaxError'
 import { NumberValue } from '../runtime/value'
 import { Statement, Program, Identifier, Expr, Int, Float, Let, BinExpr, Null, Const, VariableDeclaration, AssignmentExpr, Property, Object, CallExpr, MemberExpr, String, FunctionDeclaration, While, IfStatement, Export, Import, WhileDeclaration, ElseStatement } from './ast'
 import { Lexer } from './lexer'
-import { RED, BOLD, RESET, WHITE, YELLOW } from './utils/colors'
+import { RESET, YELLOW } from './utils/colors'
 import { Token } from './utils/Token'
 import { Type } from './utils/Type'
 
@@ -17,12 +18,11 @@ export default class Parser {
 
   constructor(code?: string) { this.code = code }
 
-  private expect(type: Type, error: any) {
+  private expect(type: Type, details: any) {
     const previous = this.tokens.shift() as Token
-    if (!previous || previous.tokenType != type) {
-      console.log(RED + BOLD + `Parse Error:\n${YELLOW + error + RESET + RED + BOLD}\nExpecting ${Type[type]}` + RESET)
-      exit(1)
-    }
+    if (!previous || previous.tokenType != type)
+      new SyntaxError(`Unexpected ${previous.value}\n ${details}`, previous)
+
     return previous
   }
   private advance() {
@@ -99,7 +99,7 @@ export default class Parser {
       this.at().tokenType === Type.SR ||
       this.at().tokenType === Type.BANG
     ) { op0 = this.at().value; this.advance() } else {
-      console.log(RED + BOLD + `Expecting one of these: ${YELLOW + ">, <, =, !" + RESET + RED + BOLD}. But got ${YELLOW + this.at().value + RESET + RED + BOLD}` + RESET)
+      new SyntaxError(`Expecting one of these: ${YELLOW + ">, <, =, !" + RESET}.\n But got ${this.at().value}`, null)
       exit(1)
     }
     const op1 = this.expect(Type.Equals, "Expecting double equals").value
@@ -114,9 +114,10 @@ export default class Parser {
 
   private parseElseStatement(): Statement {
     if (!this.ifInitialized) {
-      console.log(RED + BOLD + "No if statement found" + RESET);
+      new SyntaxError("No `IF` statement found", null)
       exit(1)
     }
+    this.ifInitialized = false
     this.advance()
     if (this.at().tokenType == Type.IF) {
       return this.parseIfStatement()
@@ -138,7 +139,7 @@ export default class Parser {
       this.at().tokenType === Type.SR ||
       this.at().tokenType === Type.BANG
     ) { op0 = this.at().value; this.advance() } else {
-      console.log(RED + BOLD + `Expecting one of these: ${YELLOW + ">, <, =, !" + RESET + RED + BOLD}. But got ${YELLOW + this.at().value + RESET + RED + BOLD}` + RESET)
+      new SyntaxError(`Expecting one of these: ${YELLOW + ">, <, =, !" + RESET}.\n But got ${this.at().value}`, null)
       exit(1)
     }
     const op1 = this.expect(Type.Equals, "Expecting double equals").value
@@ -177,7 +178,7 @@ export default class Parser {
     const params: string[] = []
     for (const arg of args) {
       if (arg.kind !== 'Identifier') {
-        console.log('Expected a string argument inside a function.')
+        new SyntaxError('Expected a string argument inside a function.', null)
         break
       }
       params.push((arg as Identifier).symbol)
@@ -208,7 +209,7 @@ export default class Parser {
     if (this.at().tokenType === Type.SEMICOL) {
       this.advance()
       if (isConstant) {
-        console.log(RED + BOLD + `Must assign to constant values, no value provided for ${identifier}` + RESET)
+        new SyntaxError(`Must assign to constant values, no value provided for ${identifier}`, null)
       }
       return {
         kind: 'VariableDeclaration',
@@ -302,7 +303,7 @@ export default class Parser {
     while (this.at().value === '*' || this.at().value === '/' || this.at().value === '%' || this.at().value === '^') {
       const op = this.advance().value
       const right = this.parseCallMemberExpr()
-      if (((right as unknown) as NumberValue).value === 0) { console.log(RED + BOLD + 'Cannot divide by 0' + RESET); exit(1) }
+      if (((right as unknown) as NumberValue).value === 0) { new SyntaxError('Cannot divide by 0.', null) }
       left = {
         kind: "BinExpr",
         left,
@@ -363,21 +364,20 @@ export default class Parser {
     let object = this.parsePrimaryExpr();
 
     while (
-      this.at().tokenType == Type.DOT || this.at().tokenType == Type.OPENSQ
+      this.at().tokenType == Type.COLON || this.at().tokenType == Type.OPENSQ
     ) {
       const operator = this.advance();
       let property: Expr;
       let computed: boolean;
 
-      // non-computed values aka obj.expr
-      if (operator.tokenType == Type.DOT) {
+      if (operator.tokenType == Type.COLON) {
+        this.expect(Type.COLON, "Expecting Double Colon (::) for Member Expression")
         computed = false;
-        // get identifier
         property = this.parsePrimaryExpr();
         if (property.kind != "Identifier") {
-          throw `Cannonot use dot operator without right hand side being a identifier`;
+          new SyntaxError(`Cannot use ":" operator without Right Side being an identifier`, null)
         }
-      } else { // this allows obj[computedValue]
+      } else {
         computed = true;
         property = this.parseExpr();
         this.expect(
@@ -445,21 +445,10 @@ export default class Parser {
       }
 
       default:
-        // error characters
         const type = this.at().tokenType
         const value = this.at().value
         const charAt = typeof this.code === 'undefined' ? '' : this.code.indexOf(value)
-
-        let spaces = ''
-        for (let i = 0; i < charAt; i++) {
-          spaces += ' '
-        }
-
-        console.log(`${RED}Unexpected Token Type: "${Type[type]}" found while parsing.${RESET}\n${BOLD + RED}Type  :${RESET} ${BOLD + WHITE + Type[type] + RESET}\n${BOLD + RED}Value :${RESET} ${BOLD + WHITE + value + RESET}`)
-        if (typeof this.code !== 'undefined') {
-          console.log(this.code.split('\n')[0])
-          console.log(`${spaces}^`)
-        }
+        new SyntaxError(`Unexpected token: ${Type[type]} -> ${value}`, null, charAt as number)
         exit(1)
     }
   }

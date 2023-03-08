@@ -10,9 +10,8 @@
   "author": "nav343",
   "license": "MIT",
   "dependencies": {
-    "@types/node": "^18.11.18",
-    "@types/prompt-sync": "^4.2.0",
-    "prompt-sync": "^4.2.0"
+    "prompt-sync": "^4.2.0",
+    "prompt-sync-history": "^1.0.1"
   },
   "bin": {
     "boronc": "./dist/index.js"
@@ -26,5 +25,9 @@
     ],
     "outputPath": "./dist/build",
     "compress": "GZip"
+  },
+  "devDependencies": {
+    "@types/node": "^18.14.6",
+    "@types/prompt-sync": "^4.2.0"
   }
 }

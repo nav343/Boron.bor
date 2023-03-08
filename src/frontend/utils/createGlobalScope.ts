@@ -4,6 +4,7 @@ import { readFileSync, writeFileSync } from "fs";
 import Environment from '../../runtime/env';
 import { exit } from "process"
 import { BOLD, RED, RESET, WHITE, YELLOW, GREEN } from "./colors";
+import { SyntaxError } from '../../error/syntaxError';
 //import { exec } from 'child_process';
 const prompt = require("prompt-sync")()
 
@@ -13,6 +14,17 @@ export function createGlobalScope() {
   env.declareVariable('PI', MKNUMBER(3.14159265359), true)
   env.declareVariable('true', MKBOOL(true), true)
   env.declareVariable('false', MKBOOL(false), true)
+
+  env.declareVariable('indexAt', MKNATIVEFN((args) => {
+    if (args.length != 2) { new SyntaxError(`Expected 2 arguments but got ${args.length}`, null) }
+    if (args[0].type != 'string' && args[0].type != undefined) { new SyntaxError(`Expected a string type but got ${args[0].type}`, null) }
+
+    const varName: any = args[0].type === 'string' ? (args[0] as StringValue).value : args[0]
+    const idx = (args[1] as NumberValue).value
+    const valAt: any = varName[idx]
+    if (valAt == undefined) { return MKNULL() }
+    return valAt
+  }), true)
 
   // Native functions like writeFile, print, time etc
   env.declareVariable('exit', MKNATIVEFN((args) => {
@@ -31,7 +43,10 @@ export function createGlobalScope() {
 
   env.declareVariable('print', MKNATIVEFN((args) => {
     args.map((result: any) => {
-      if (result.type === "object") console.log(result.properties)
+      if (result.type === "object") {
+        if (result.properties.has("thread?")) { console.log(GREEN + BOLD + '[NATIVE OBJECT]' + RESET); exit(0) }
+        console.log(result.properties)
+      }
       else if (result.type === 'null') console.log(null)
       else if (result.type === 'boolean') console.log(result.value)
       else if (result.type === 'number' || result.type === 'float') console.log(result.value)
@@ -55,7 +70,10 @@ export function createGlobalScope() {
     if (color?.type != 'string') { console.log(RED + BOLD + `Cannot use ${color?.type} as a color type.` + RESET); exit(1) }
 
     args.slice(1).map((result: any) => {
-      if (result.type === "object") console.log(colorValue + result.properties + RESET)
+      if (result.type === "object") {
+        if (result.properties.has("thread?")) { console.log(GREEN + BOLD + '[NATIVE OBJECT]' + RESET); exit(0) }
+        console.log(colorValue + result.properties + RESET)
+      }
       else if (result.type === 'null') console.log(colorValue + null + RESET)
       else if (result.type === 'boolean') console.log(colorValue + result.value + RESET)
       else if (result.type === 'number' || result.type === 'float') console.log(colorValue + result.value + RESET)
@@ -84,9 +102,17 @@ export function createGlobalScope() {
   }), true) */
 
   env.declareVariable('toLowerCase', MKNATIVEFN((args) => {
-    if (args.length == 0) { console.log(RED + BOLD + "Expecing a" + RESET); exit(1) }
-    args.map((_var) => { (_var as StringValue).value })
-    return MKNULL()
+    const obj: any = []
+    if (args.length == 0) { console.log(RED + BOLD + "Expecing a SINGLE value, but got " + args.length + RESET); exit(1) }
+    args.map((str: any) => obj.push(str.value.toLowerCase()))
+    return obj.join(' ')
+  }), true)
+
+  env.declareVariable('toUpperCase', MKNATIVEFN((args) => {
+    const obj: any = []
+    if (args.length == 0) { console.log(RED + BOLD + "Expecing a SINGLE value, but got " + args.length + RESET); exit(1) }
+    args.map((str: any) => obj.push(str.value.toUpperCase()))
+    return obj.join(' ')
   }), true)
 
   env.declareVariable('typeof', MKNATIVEFN((args) => {
@@ -116,19 +142,22 @@ export function createGlobalScope() {
   env.declareVariable('thread', MKNATIVEOBJ({
     type: 'object',
     properties: new Map<string, RuntimeValues>()
+      .set("thread?", MKBOOL(true))
       .set("pwd", MKSTRING(process.cwd()))
       .set("width", MKNUMBER(process.stdout.columns))
+      .set("height", MKNUMBER(process.stdout.rows))
   }), true)
 
   // Just for fun, you can override this function
   env.declareVariable('aMagicFunction', MKNATIVEFN(() => {
-    console.log("U called me?")
-    let stars = '*'
-    while (stars.length < 1000) {
-      stars += '!'
-      stars += '*'
-      console.log(RED + BOLD + stars + RESET)
-    }
+    let str = '*'
+    let spaces = ''
+    console.clear()
+    str = str.repeat(process.stdout.columns)
+    for (let i = 0; i < process.stdout.rows; i++) console.log(GREEN + BOLD + str + RESET)
+    for (let i = 0; i < (process.stdout.columns / 2) - 10; i++) spaces += ' '
+    console.log(GREEN + BOLD + spaces + "You called me?" + RESET)
+    setTimeout(() => { console.clear() }, 1000)
     return MKNULL()
   }), false)
 

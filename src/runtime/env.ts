@@ -1,5 +1,6 @@
 import { exit } from "process"
-import { BOLD, RED, RESET, YELLOW } from "../frontend/utils/colors";
+import { SyntaxError } from "../error/syntaxError";
+import { VariableNotFound } from "../error/variableNotFound";
 import { RuntimeValues } from "./value";
 
 export default class Environment {
@@ -20,7 +21,7 @@ export default class Environment {
 
   public declareVariable(varName: string, value: RuntimeValues, isConstant: boolean): RuntimeValues {
     if (this.variables.has(varName)) {
-      console.log(RED + `Cannot redeclare variable ${YELLOW + BOLD + varName + RESET}.\n${YELLOW + BOLD}Try using another name or remove the existing variable` + RESET)
+      new SyntaxError(`Cannot redeclare variable ${varName}. Try using another name or try removing the existing variable with the name "${varName}"`, null)
       exit(1)
     }
     this.variables.set(varName, value)
@@ -33,7 +34,7 @@ export default class Environment {
   public assignVariable(varName: string, value: RuntimeValues): RuntimeValues {
     const env = this.resolve(varName)
     if (env.constants.has(varName)) {
-      console.log(RED + BOLD + `Cannot assign to a constant variable ${YELLOW + varName}` + RESET)
+      new SyntaxError(`Cannot assign to a constant variable ${varName}`, null)
       exit(1)
     }
 
@@ -46,7 +47,7 @@ export default class Environment {
       return this
     }
     if (this.parent === undefined) {
-      console.log(RED + BOLD + `Cannot resolve ${YELLOW + varName + RED} because it does not exist.` + RESET)
+      new VariableNotFound(`Cannot resolve ${varName} as it does not exist or is out of scope.`, null)
       /*const col = this.code.indexOf(varName)
       let nice = ''
       for (let i = 0; i < col; i++) {

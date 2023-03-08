@@ -1,6 +1,5 @@
-import { exit } from "process"
+import { SyntaxError } from "../../error/syntaxError"
 import { BinExpr } from "../../frontend/ast"
-import { BOLD, RED, RESET } from "../../frontend/utils/colors"
 import Environment from "../env"
 import { evaluate } from "../interpreter"
 import { MKNULL, MKSTRING, NumberValue, RuntimeValues, StringValue } from "../value"
@@ -21,7 +20,7 @@ export function evalBinExpr(expr: BinExpr, env: Environment): RuntimeValues {
     const right = (rightHand as StringValue).value
 
     if (expr.op === '+') return MKSTRING(left + right)
-    else { console.log(RED + BOLD + `Cannot subtract or divide a string from anything ` + RESET); exit(1) }
+    else { new SyntaxError(`Cannot divide or subtract a string from anything`, null) }
   }
 
   else if (leftHand.type === 'string' && rightHand.type === 'number' || expr.right.kind === 'Identifier') {
@@ -29,7 +28,7 @@ export function evalBinExpr(expr: BinExpr, env: Environment): RuntimeValues {
     const right = rightHand.type === 'number' ? (rightHand as NumberValue).value : rightHand as any
 
     if (expr.op === '*') return MKSTRING(left.repeat(right))
-    else { console.log(RED + BOLD + `Can only multiply with the left hand being a string and right hand being a number` + RESET); exit(1) }
+    else { new SyntaxError(`Can only multiply with the left hand being a string and right hand being a number`, null) }
   }
   return MKNULL()
 }

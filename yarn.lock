@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@types/node@^18.11.18":
-  version "18.11.18"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.11.18.tgz#8dfb97f0da23c2293e554c5a50d61ef134d7697f"
-  integrity sha512-DHQpWGjyQKSHj3ebjFI/wRKcqQcdR+MoFBygntYOZytCqNfkd2ZC4ARDJ2DQqhjH5p85Nnd3jhUJIXrszFX/JA==
+"@types/node@^18.14.6":
+  version "18.14.6"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.14.6.tgz#ae1973dd2b1eeb1825695bb11ebfb746d27e3e93"
+  integrity sha512-93+VvleD3mXwlLI/xASjw0FzKcwzl3OdTCzm1LaRfqgS21gfFtK3zDXM5Op9TeeMsJVOaJ2VRDpT9q4Y3d0AvA==
 
 "@types/prompt-sync@^4.2.0":
   version "4.2.0"
@@ -16,6 +16,11 @@ ansi-regex@^4.1.0:
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/ansi-regex/-/ansi-regex-4.1.1.tgz#164daac87ab2d6f6db3a29875e2d1766582dabed"
   integrity sha512-ILlv4k/3f6vfQ4OoP2AGvirOktlQ98ZEL1k9FaQjxa3L1abBgbuTDAdPOpvbGncC0BTVQrl+OM8xZGK6tWXt7g==
+
+prompt-sync-history@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/prompt-sync-history/-/prompt-sync-history-1.0.1.tgz#d02edf18cc03b8932867156c292274ba2c0050fd"
+  integrity sha512-R51qH1GbLvsSImtOLv+VGbO0Rv3uRYg5UxIGT82AotP/2AcOQaQSG4pYxDlMphZKgsmGSKRS+t0AmaPG/p4Gig==
 
 prompt-sync@^4.2.0:
   version "4.2.0"
